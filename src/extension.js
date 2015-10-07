@@ -11,7 +11,6 @@ var ResultsComponent = React.createClass({
 
   getInitialState: function(){
     return {
-      requestData: '',
       width: window.innerWidth,
       height: window.innerHeight,
     }
@@ -20,17 +19,13 @@ var ResultsComponent = React.createClass({
   componentDidMount: function(){
     var component = this;
     window.addEventListener('resize', this.handleResize);
-    // this.renderPreview({source: ''});
+    this.renderPreview({source: ''});
 
-    // chrome.runtime.onMessage.addListener(function(request, sender){
-    //   component.setState({requestData: request});
-    //   console.log('request', request);
-    // })
   },
 
   componentWillReceiveProps: function() {
     this.item = {source: ''};
-    // this.renderPreview(this.item);
+    this.renderPreview(this.item);
   },
 
   componentWillUnmount: function() {
@@ -38,36 +33,31 @@ var ResultsComponent = React.createClass({
   },
 
   item: {source: ''},
-  // renderPreview: function(item) {
-  //   React.render(
-  //     <Preview previewItem={item} window={this.state} />,
-  //     document.getElementById('preview')
-  //   );
-  // },
+  renderPreview: function(item) {
+    React.render(
+      React.createElement(Preview, {previewItem: item, window: this.state}),
+      document.getElementById('preview')
+    );
+  },
 
   handleResize: function(e) {
     this.setState({
       width: window.innerWidth,
       height: window.innerHeight,
     });
-    // this.renderPreview(this.item);
-  },
-
-  queryTerm: function(searchTerm){
-    this.setState({
-      searchTerm: searchTerm
-    });
+    this.renderPreview(this.item);
   },
 
   mouseOver: function(item){    
     this.item = item;
-    // this.renderPreview(this.item);
+    this.renderPreview(this.item);
   },
 
   render: function(){
     return (
-      React.createElement('div', {id: "results"}, 
-        React.createElement(TreeTimeLine, {mouseOver: this.mouseOver, windowHeight: this.state.height, windowWidth: this.state.width})
+      React.createElement('div', {id: "results"},
+        React.createElement(TreeTimeLine, {mouseOver: this.mouseOver, window: this.state}),
+        React.createElement('div', {id: "preview"}) 
       )
     )
   }

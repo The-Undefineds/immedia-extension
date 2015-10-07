@@ -4,6 +4,9 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab){
     chrome.tabs.executeScript(null, {file: "./assests/d3.min.js"});
     chrome.tabs.executeScript(null, {file: "./assests/react.js"});
     chrome.tabs.executeScript(null, {file: "./src/treetimeline.js"})
+    chrome.tabs.executeScript(null, {file: "./src/preview.js"})
+    chrome.tabs.executeScript(null, {file: "./src/emptypreview.js"})
+
 
     chrome.pageAction.show(tab.id);
     
