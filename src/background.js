@@ -3,9 +3,17 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab){
     chrome.tabs.executeScript(null, {file: "./assests/jquery.min.js"});
     chrome.tabs.executeScript(null, {file: "./assests/d3.min.js"});
     chrome.tabs.executeScript(null, {file: "./assests/react.js"});
-    chrome.tabs.executeScript(null, {file: "./src/treetimeline.js"})
-    chrome.tabs.executeScript(null, {file: "./src/preview.js"})
-    chrome.tabs.executeScript(null, {file: "./src/emptypreview.js"})
+    chrome.tabs.executeScript(null, {file: "./assests/youtube1.js"});
+    chrome.tabs.executeScript(null, {file: "./assests/youtube2.js"});
+    chrome.tabs.executeScript(null, {file: "./src/treetimeline.js"});
+    chrome.tabs.executeScript(null, {file: "./src/preview.js"});
+    chrome.tabs.executeScript(null, {file: "./src/emptypreview.js"});
+    chrome.tabs.executeScript(null, {file: "./src/nytpreview.js"});
+    chrome.tabs.executeScript(null, {file: "./src/twitterpreview.js"});
+    chrome.tabs.executeScript(null, {file: "./src/youtubepreview.js"});
+
+
+
 
 
     chrome.pageAction.show(tab.id);

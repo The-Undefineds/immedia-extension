@@ -5,6 +5,7 @@ var emptyStyles = {
     fontFamily: 'Avenir',
     fontSize: '24px',
     color: '#00BFFF',
+    left: '',
   }
 };
 

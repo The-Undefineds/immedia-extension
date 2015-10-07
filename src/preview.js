@@ -5,6 +5,7 @@ var previewStyles = {
     position: 'absolute',
     paddingRight: '10px',
     textAlign: 'center',
+    
   }
 };
 
