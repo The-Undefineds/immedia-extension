@@ -1,11 +1,11 @@
 // var StyleSheet = require('react-style');
 
-// var styles = StyleSheet.create({
-  // anchor: {
-    // textDecoration: 'none',
-    // color: 'inherit',
-  // },
-// });
+var NytStyles = {
+  anchor: {
+    textDecoration: 'none',
+    color: 'inherit',
+  },
+};
 
 var NytPreview = React.createClass({
 
@@ -21,7 +21,7 @@ var NytPreview = React.createClass({
       }
     }
     return (
-      React.createElement('a', { style : styles.anchor, href : this.props.previewItem.url, target : '_blank'},
+      React.createElement('a', { style : NytStyles.anchor, href : this.props.previewItem.url, target : '_blank'},
         React.createElement('div', null,
           React.createElement('h1', { style : { marginTop : '0px', marginBottom : '10px' } }, this.props.previewItem.title),
           React.createElement('h3', { style : { marginTop : '5px', marginBottom : '5px' } }, this.props.previewItem.byline),

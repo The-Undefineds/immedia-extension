@@ -36,9 +36,12 @@ var YouTubePreview = React.createClass({
   },
 
   mountYouTubeVideo: function(videoId){
+    console.log('this is YT', YT);
+    console.log('this is YT.Player', YT.PlayerState);
+
     var player = new YT.Player('youtube', { // The 'player' refers to an id attached to an element
-      height: this.state.height,
-      width: this.state.width,
+      height: '390',
+      width: '640',
       videoId: videoId,
       events: {
         'onReady': onPlayerReady,
