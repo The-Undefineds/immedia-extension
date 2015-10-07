@@ -1,0 +1,18 @@
+{
+  "manifest_version": 2,
+
+  "name": "Testing React",
+  "description": "This React Powered Extension",
+  "version": "1.0",
+
+  "page_action": {
+    "default_icon": "icon.png"
+  },
+  "background": {
+    "scripts": ["./assests/jquery.min.js", "./src/background.js"],
+    "persistent": false
+  },
+
+  "permissions": ["activeTab", "tabs", "*://*.wikipedia.org/*", "*://*.immedia.xyz/*", "*://*.hitthefloor.com/wp-content/uploads/2014/03/20-new-york-times-t-1.jpg/*"]
+  
+}
