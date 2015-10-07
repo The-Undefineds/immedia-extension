@@ -2,10 +2,11 @@
 
 var i = 0;
 
-var styles = {
+var d3Styles = {
   container: {
     position: 'absolute',
     top: '55px',
+    left: '100px',
   },
   title: {
     fontFamily: 'Avenir',
@@ -31,8 +32,8 @@ var TreeTimeLine = React.createClass({
     return {
       timeSpan: 7,
       apiData: [],
-      width: this.props.windowWidth,
-      height: this.props.windowHeight,
+      width: this.props.window.width,
+      height: this.props.window.height,
     };
   },
 
@@ -107,8 +108,8 @@ var TreeTimeLine = React.createClass({
         console.log('previousApiData', previousApiData)
         return {
           apiData: previousApiData,
-          width: this.props.windowWidth,
-          height: this.props.windowHeight
+          width: this.props.window.width,
+          height: this.props.window.height
         }
       });
     })
@@ -177,17 +178,17 @@ var TreeTimeLine = React.createClass({
     this.getDynamicStyles();
     console.log('coming from d3 render', this.state.apiData);
     return (
-      React.createElement('div', { style : styles.containers},
-        React.createElement('span', { id : 'd3title', style : styles.title }, 'recent events'),
-        React.createElement('div', { id : 'd3container', style : styles.d3})
+      React.createElement('div', { style : d3Styles.container},
+        React.createElement('span', { id : 'd3title', style : d3Styles.title }, 'recent events'),
+        React.createElement('div', { id : 'd3container', style : d3Styles.d3})
       )
     );
   },
 
   getDynamicStyles: function() {
-    styles.container.left = (this.state.width - 1350 > 0 ? (this.state.width - 1350) / 2 : 5) + 'px';
-    styles.container.width = (this.state.width - 1350 < 0 ? 350 * (this.state.width/1350) : 350) + 'px';
-    styles.container.height = (this.dates.length*120) + 'px';
+    d3Styles.container.left = (this.state.width - 1350 > 0 ? (this.state.width - 1350) / 2 : 5) + 'px';
+    d3Styles.container.width = (this.state.width - 1350 < 0 ? 350 * (this.state.width/1350) : 350) + 'px';
+    d3Styles.container.height = (this.dates.length*120) + 'px';
     return;
   },
 
