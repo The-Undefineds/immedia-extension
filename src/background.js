@@ -12,10 +12,6 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab){
     chrome.tabs.executeScript(null, {file: "./src/twitterpreview.js"});
     chrome.tabs.executeScript(null, {file: "./src/youtubepreview.js"});
 
-
-
-
-
     chrome.pageAction.show(tab.id);
     
   }
@@ -42,7 +38,7 @@ function handleQuery(searchQuery, results){
    .done(function(response) {
       chrome.tabs.sendMessage(results[0].id, response);
       console.log('Post request was a Success...Here is the response', response)
-   }.bind(this));
+   });
 }
 
 function checkTab(){

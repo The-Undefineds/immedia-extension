@@ -8,6 +8,7 @@
   "page_action": {
     "default_icon": "icon.png"
   },
+
   "background": {
     "scripts": ["./assests/jquery.min.js", "./src/background.js"],
     "persistent": false

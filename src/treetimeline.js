@@ -436,15 +436,14 @@ var TreeTimeLine = React.createClass({
             } else if (d.depth === 3)
               return 25;
           })
-          .style('fill', 'white')
+          .style('fill', 'lightsteelblue')
           .style("fill", function(d) { 
-            var dat = d;
             if (d.source == 'twitter') {
-              return 'url(/#tile-twitter)';
+              return 'url(#tile-twitter)';
             } else if (d.source == 'nyt') {
-              return 'url(/#tile-nyt)';
+              return 'url(#tile-nyt)';
             } else if (d.source == 'youtube') {
-              return 'url(/#tile-youtube)';
+              return 'url(#tile-youtube)';
             } else if (d.img === '') {
               return colors(d.id);
             } else if (d.depth === 3) {
@@ -466,7 +465,7 @@ var TreeTimeLine = React.createClass({
                 .attr('y', 0)
                 .attr('width', 55)
                 .attr('height', 55)
-              return 'url(/#tile-img' + d.id + ')'
+              return 'url(#tile-img' + d.id + ')'
             }
             return d._children ? "lightsteelblue" : "#fff"; 
           })
