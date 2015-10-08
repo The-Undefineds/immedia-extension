@@ -1,4 +1,4 @@
-document.body.innerHTML = '';
+// document.body.innerHTML = '';
 var container = document.createElement('div')
 container.id = 'extention';
 
@@ -35,7 +35,7 @@ var ResultsComponent = React.createClass({
   item: {source: ''},
   renderPreview: function(item) {
     React.render(
-      React.createElement(Preview, {previewItem: item, window: this.state}),
+      React.createElement(Preview, {previewItem: item, windowHeight: this.state.height, windowWidth: this.state.width}),
       document.getElementById('preview')
     );
   },
@@ -56,7 +56,7 @@ var ResultsComponent = React.createClass({
   render: function(){
     return (
       React.createElement('div', {id: "results"},
-        React.createElement(TreeTimeLine, {mouseOver: this.mouseOver, window: this.state}),
+        React.createElement(TreeTimeLine, {mouseOver: this.mouseOver, windowHeight: this.state.height, windowWidth: this.state.width}),
         React.createElement('div', {id: "preview"}) 
       )
     )

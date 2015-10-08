@@ -1,5 +1,9 @@
+var searchTerm;
+var extensionMounted;
 chrome.tabs.onUpdated.addListener(function(id, info, tab){
   if(tab.url.match(/wikipedia.org/g)){
+    //load our dependencies and content scripts
+    extensionMounted = false;
     chrome.tabs.executeScript(null, {file: "./assests/jquery.min.js"});
     chrome.tabs.executeScript(null, {file: "./assests/d3.min.js"});
     chrome.tabs.executeScript(null, {file: "./assests/react.js"});
@@ -12,52 +16,49 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab){
     chrome.tabs.executeScript(null, {file: "./src/twitterpreview.js"});
     chrome.tabs.executeScript(null, {file: "./src/youtubepreview.js"});
 
+    //Once on the page, parse the url for the search term
+    chrome.tabs.query({active: true, currentWindow: true}, function(results){
+      searchTerm = parseUrl(results[0].url);
+    });
+
     chrome.pageAction.show(tab.id);
     
   }
 });
 
-chrome.pageAction.onClicked.addListener(function(tab){
- 
-  if(tab.url.match(/wikipedia.org/g)){
+chrome.runtime.onMessage.addListener(function(message, sender){
+  handleQuery(message);
+});
 
-    chrome.tabs.executeScript(null, {file: "./src/extension.js"}, function(){
-      checkTab();
-    })
+chrome.pageAction.onClicked.addListener(function(tab){
+  if(!extensionMounted){
+    chrome.tabs.executeScript(null, {file: "./src/extension.js"})
+  }
+  else{
+    chrome.tabs.executeScript(null, {code: "document.body.removeChild(document.getElementId('extension'))"})
   }
   
+  extensionMounted = !extensionMounted;
 })
 
 function parseUrl(url){
-  var resultURL = url.slice(30, url.length)
+  var index = url.lastIndexOf('/');
+  var resultURL = url.slice(index + 1);
   return resultURL.replace(/_/g, ' ');
 }
 
 function handleQuery(searchQuery, results){
+  searchQuery.searchTerm = searchTerm;  
   $.post(searchQuery.url, searchQuery)
    .done(function(response) {
-      chrome.tabs.sendMessage(results[0].id, response);
+    checkTabs(response);
       console.log('Post request was a Success...Here is the response', response)
    });
 }
 
-function checkTab(){
-  chrome.tabs.query({active: true, currentWindow: true}, function(results){
-      console.log('success', results);
-      var searchTerm = parseUrl(results[0].url)
-      var apis = [
-        'nyt',
-        // 'twitter',
-        'youtube',
-        // 'news'
-      ];
-
-      for(var i = 0; i <apis.length; i++){
-        handleQuery({
-          searchTerm: searchTerm,
-          url: 'http://immedia.xyz/api/' + apis[i],
-          api: apis[i]
-        }, results);
-      }
-  })
-} 
+function checkTabs(response){
+  console.log('checkTabs', response);
+  chrome.tabs.query({active:true}, function(tabs){
+    chrome.tabs.sendMessage(tabs[0].id, response);               
+  });
+}

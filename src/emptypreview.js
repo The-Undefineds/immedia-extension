@@ -13,8 +13,8 @@ var EmptyPreview = React.createClass({
 
   getInitialState: function() {
     return {
-      width: this.props.window.width,
-      height: this.props.window.height,
+      width: this.props.windowWidth,
+      height: this.props.windowHeight,
     }
   },
 

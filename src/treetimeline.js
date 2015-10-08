@@ -32,126 +32,85 @@ var TreeTimeLine = React.createClass({
     return {
       timeSpan: 7,
       apiData: [],
-      width: this.props.window.width,
-      height: this.props.window.height,
+      width: this.props.windowWidth,
+      height: this.props.windowHeight,
     };
   },
 
-  // apis: [
-    // 'nyt',
+  apis: [
+    'nyt',
     // 'twitter',
-    // 'youtube',
+    'youtube',
     // 'news'
-  // ],
+  ],
 
-  // query: function(searchTerm){
-  //   var index = searchTerm.indexOf('(');
-  //   if (index !== -1) searchTerm = searchTerm.slice(0, index);
-  //   for(var i = 0; i < this.apis.length; i++){
-  //     this.handleQuery({
-  //       searchTerm: searchTerm,
-  //       url: '//immedia.xyz/api/' + this.apis[i],
-  //       api: this.apis[i]
-  //     });
-  //   }
-  // },
-
-  // componentDidMount: function(){
-  //   var component = this;
-  //   // this.query(this.props.searchTerm);
-  //   $(window).scroll(function() {
-  //      if($(window).scrollTop() + $(window).height() > $(document).height() - 50) {
-  //          console.log("bottom!");
-  //          if (component.dates.length > 30) {
-  //           return;
-  //          }
-  //          component.setTimeSpan(component.dates.length + 7);
-  //      }
-  //   });
-  // },
+  query: function(searchTerm){
+    for(var i = 0; i < this.apis.length; i++){
+      chrome.runtime.sendMessage({
+        url: 'http://immedia.xyz/api/' + this.apis[i],
+        api: this.apis[i]
+      });
+    }
+  },
 
   componentDidMount: function(){
     var component = this;
-    chrome.runtime.onMessage.addListener(function(response, sender){
-  
-      console.log('request', response);
-      component.setState(function(previousState, currentProps) {
-        
-        var previousApiData = previousState['apiData'].slice();
-        console.log('currentProps', currentProps);
-
-        for(var date in response) {
-          var j = 0;
-          for(; j < previousApiData.length; j++) {
-            if(previousApiData[j]['date'] === date) {
-              previousApiData[j]['children'].push(response[date]);
-              break;
-            }
-          }
-          
-          if(j === previousApiData.length) {
-            previousApiData.push(
-              {
-                'date': date, 
-                'children': [
-                  response[date]
-                ]
-            });
-          }
-        }
-        
-        previousApiData.sort(function(a, b) {
-          var aDate = new Date(a['date']);
-          var bDate = new Date(b['date']);
-          return bDate - aDate;
-        });
-        console.log('previousApiData', previousApiData)
-        return {
-          apiData: previousApiData,
-          width: this.props.window.width,
-          height: this.props.window.height
-        }
-      });
-    })
+    this.query();
+    $(window).scroll(function() {
+       if($(window).scrollTop() + $(window).height() > $(document).height() - 50) {
+           console.log("bottom!");
+           if (component.dates.length > 30) {
+            return;
+           }
+           component.setTimeSpan(component.dates.length + 7);
+       }
+    });
+    chrome.runtime.onMessage.addListener(function(message, sender){
+      component.handleQuery(message);
+    });
   },
 
-  // handleQuery: function(searchQuery){
-  //   $.post(searchQuery.url, searchQuery)
-  //    .done(function(response) {
-        // this.setState(function(previousState, currentProps) {
-        //   var previousApiData = previousState['apiData'].slice();
-          
-        //   for(var date in response) {
-        //     var i = 0;
-            
-        //     for(; i < previousApiData.length; i++) {
-        //       if(previousApiData[i]['date'] === date) {
-        //         previousApiData[i]['children'].push(response[date]);
-        //         break;
-        //       }
-        //     }
-            
-        //     if(i === previousApiData.length) {
-        //       previousApiData.push(
-        //         {
-        //           'date': date, 
-        //           'children': [
-        //             response[date]
-        //           ]
-        //         }
-        //       );
-        //     }
-        //   }
-          
-        //   previousApiData.sort(function(a, b) {
-        //     var aDate = new Date(a['date']);
-        //     var bDate = new Date(b['date']);
-        //     return bDate - aDate;
-        //   });
-        //   return {apiData: previousApiData};
-  //       });
-  //    }.bind(this));
-  // },
+  componentWillReceiveProps: function(newProps){
+    this.setState({
+      width: newProps.windowWidth,
+      height: newProps.windowHeight
+    });
+  },
+
+  handleQuery: function(response){
+    this.setState(function(previousState, currentProps) {
+      var previousApiData = previousState['apiData'].slice();
+      
+      for(var date in response) {
+        var i = 0;
+        
+        for(; i < previousApiData.length; i++) {
+          if(previousApiData[i]['date'] === date) {
+            previousApiData[i]['children'].push(response[date]);
+            break;
+          }
+        }
+        
+        if(i === previousApiData.length) {
+          previousApiData.push(
+            {
+              'date': date, 
+              'children': [
+                response[date]
+              ]
+            }
+          );
+        }
+      }
+      
+      previousApiData.sort(function(a, b) {
+        var aDate = new Date(a['date']);
+        var bDate = new Date(b['date']);
+        return bDate - aDate;
+      });
+      return {apiData: previousApiData};
+    });
+  },
 
   dates: [],
 
@@ -176,7 +135,7 @@ var TreeTimeLine = React.createClass({
 
     this.renderCanvas();
     this.getDynamicStyles();
-    console.log('coming from d3 render', this.state.apiData);
+    
     return (
       React.createElement('div', { style : d3Styles.container},
         React.createElement('span', { id : 'd3title', style : d3Styles.title }, 'recent events'),
@@ -228,7 +187,7 @@ var TreeTimeLine = React.createClass({
     };
 
     var width = (this.state.width - 1350 < 0 ? this.state.width * (350/1350) : 350),
-        height = this.dates.length*60;
+        height = this.state.height - 100;
 
     var oldestItem = this.state.apiData[this.state.apiData.length - 1] ? 
                       this.state.apiData[this.state.apiData.length - 1] : null;
@@ -299,12 +258,12 @@ var TreeTimeLine = React.createClass({
     function update(source) {
 
       var duration = function(d) {
-        // if (d.rendered < component.apis.length) {
-        //   d.rendered++;
-        //   return 5;
-        // } else if (!d.rendered) {
-        //   d.rendered = 1;
-        // }
+        if (d.rendered < component.apis.length) {
+          d.rendered++;
+          return 5;
+        } else if (!d.rendered) {
+          d.rendered = 1;
+        }
         return 500;
       }
 
