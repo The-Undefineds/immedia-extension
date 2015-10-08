@@ -13,15 +13,15 @@ var Preview = React.createClass({
 
   getInitialState: function() {
     return {
-      width: this.props.window.width,
-      height: this.props.window.height,
+      width: this.props.windowWidth,
+      height: this.props.windowHeight,
     };
   },
 
   componentWillReceiveProps: function(nextProps) {
     this.setState({
-      width: nextProps.window.width,
-      height: nextProps.window.height,
+      width: nextProps.windowWidth,
+      height: nextProps.windowHeight,
     });
   },
 
@@ -30,7 +30,7 @@ var Preview = React.createClass({
 
     return (
       React.createElement('div', { id : 'previewContent', style : previewStyles.preview},
-        this.props.previewItem.source === '' ?  React.createElement(EmptyPreview, { window : this.state }) : null,
+        this.props.previewItem.source === '' ?  React.createElement(EmptyPreview, { windowHeight: this.state.height, windowWidth: this.state.width }) : null,
         this.props.previewItem.source === 'nyt' ?  React.createElement(NytPreview, { previewItem : this.props.previewItem }) : null,
         this.props.previewItem.source === 'twitter' ?  React.createElement(TwitterPreview, { previewItem : this.props.previewItem }) : null,
         this.props.previewItem.source === 'youtube' ?  React.createElement(YouTubePreview, { previewItem : this.props.previewItem, width : previewStyles.preview.width, height : previewStyles.preview.height }) : null
