@@ -1,0 +1,1 @@
+$('head').append("<meta name=\"twitter:widgets:csp\" content=\"on\" />")

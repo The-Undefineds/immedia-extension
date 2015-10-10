@@ -16,32 +16,45 @@ window.twttr = (function(d, s, id) {
   return t;
 }(document, "script", "twitter-wjs"));
 
-
 var TwitterPreview = React.createClass({
 
-  embedTweet: function() {
-    var tweetId = this.props.previewItem.url.slice(this.props.previewItem.url.length - 18, this.props.previewItem.url.length);
+  // getInitialState: function(){
+  //   return {
+  //     renderCount: 0,
+  //   }
+  // },
 
-    $('<div id="tweet"></div>').hide().prependTo('#twitterPreview').fadeIn(800);
-    twttr.widgets.createTweet(
-      tweetId,
-      document.getElementById('tweet')
-      )
+  twitterStyles: {
+    height: '600px',
+    width: '600px',
   },
 
+
   componentDidMount: function() {
-    this.embedTweet();
-},
+    this.componentDidUpdate();
+  },
 
   componentDidUpdate: function() {
     $('#twitterPreview').empty();
-    this.embedTweet();
+    var twitterItem = this.props.previewItem;
+    this.embedTweet(twitterItem.tweetId);
+  },
+
+  embedTweet: function(tweetId) {
+  
+    $('#twitterPreview').append('<div id="tweet"></div>')
+    twttr.widgets.createTweet(tweetId, document.getElementById('extension'), {
+      theme: 'dark'
+    })
+    console.log(twttr.widgets.createTweet)
+    // $('#tweet').html('Hello World');
+    
   },
 
   render: function() {
 
     return (
-      React.createElement('div', { id : 'twitterPreview'})
+      React.createElement('div', { id:'twitterPreview', style: this.twitterStyles})
       )
 
   }

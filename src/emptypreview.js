@@ -2,7 +2,7 @@
 
 var emptyStyles = {
   directions: {
-    fontFamily: 'Avenir',
+    fontFamily: 'Nunito',
     fontSize: '24px',
     color: '#00BFFF',
     left: '',
