@@ -4,11 +4,13 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab){
   if(tab.url.match(/wikipedia.org/g)){
     //load our dependencies and content scripts
     extensionMounted = false;
-    chrome.tabs.executeScript(null, {file: "./assests/jquery.min.js"});
-    chrome.tabs.executeScript(null, {file: "./assests/d3.min.js"});
-    chrome.tabs.executeScript(null, {file: "./assests/react.js"});
-    chrome.tabs.executeScript(null, {file: "./assests/youtube1.js"});
-    chrome.tabs.executeScript(null, {file: "./assests/youtube2.js"});
+    chrome.tabs.executeScript(null, {file: "./assets/jquery.min.js"});
+    chrome.tabs.executeScript(null, {file: "./assets/d3.min.js"});
+    chrome.tabs.executeScript(null, {file: "./assets/react.js"});
+    chrome.tabs.executeScript(null, {file: "./assets/youtube1.js"});
+    chrome.tabs.executeScript(null, {file: "./assets/youtube2.js"});
+
+    chrome.tabs.executeScript(null, {file: "./src/loadmeta.js"});
     chrome.tabs.executeScript(null, {file: "./src/treetimeline.js"});
     chrome.tabs.executeScript(null, {file: "./src/preview.js"});
     chrome.tabs.executeScript(null, {file: "./src/emptypreview.js"});
@@ -31,14 +33,18 @@ chrome.runtime.onMessage.addListener(function(message, sender){
 });
 
 chrome.pageAction.onClicked.addListener(function(tab){
-  if(!extensionMounted){
+  if(extensionMounted === false){
     chrome.tabs.executeScript(null, {file: "./src/extension.js"})
+    extensionMounted = true
   }
   else{
-    chrome.tabs.executeScript(null, {code: "document.body.removeChild(document.getElementId('extension'))"})
+    chrome.tabs.executeScript(null, {code: "$(\'div\').remove(\'#extension\')"})
+    //tabs need to reload unless, searchterm is not mounted to be searched
+    //onl random youtube videos appear
+    chrome.tabs.reload();
+    extensionMounted = false
   }
   
-  extensionMounted = !extensionMounted;
 })
 
 function parseUrl(url){
@@ -59,6 +65,7 @@ function handleQuery(searchQuery, results){
 function checkTabs(response){
   console.log('checkTabs', response);
   chrome.tabs.query({active:true}, function(tabs){
+    chrome.tabs.executeScript(null, {file: "./assets/twitter.js"});
     chrome.tabs.sendMessage(tabs[0].id, response);               
   });
 }

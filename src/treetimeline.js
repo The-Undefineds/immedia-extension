@@ -6,7 +6,7 @@ var d3Styles = {
   container: {
     position: 'absolute',
     top: '55px',
-    left: '100px',
+    left: '5px',
   },
   title: {
     fontFamily: 'Avenir',
@@ -39,7 +39,7 @@ var TreeTimeLine = React.createClass({
 
   apis: [
     'nyt',
-    // 'twitter',
+    'twitter',
     'youtube',
     // 'news'
   ],
@@ -133,21 +133,21 @@ var TreeTimeLine = React.createClass({
 
     generateDates(this.state.timeSpan);
 
-    this.renderCanvas();
+    this.renderCanvas();  // Crucial step that (re-)renders D3 canvas
     this.getDynamicStyles();
     
     return (
       React.createElement('div', { style : d3Styles.container},
         React.createElement('span', { id : 'd3title', style : d3Styles.title }, 'recent events'),
-        React.createElement('div', { id : 'd3container', style : d3Styles.d3})
+        React.createElement('div', { id : 'd3canvas'})
       )
     );
   },
 
   getDynamicStyles: function() {
-    d3Styles.container.left = (this.state.width - 1350 > 0 ? (this.state.width - 1350) / 2 : 5) + 'px';
+    // d3Styles.container.left = (this.state.width - 1350 > 0 ? (this.state.width - 1350) / 2 : 5) + 'px';
     d3Styles.container.width = (this.state.width - 1350 < 0 ? 350 * (this.state.width/1350) : 350) + 'px';
-    d3Styles.container.height = (this.dates.length*120) + 'px';
+    d3Styles.container.height = (this.dates.length*60) + 'px';
     return;
   },
 
@@ -164,7 +164,7 @@ var TreeTimeLine = React.createClass({
         img: item.img,
         source: item.parent.source,
         id: item.id,
-        tweet: item.tweet,
+        tweetId: item.tweet_id_str,
         byline: (item.hasOwnProperty('byline') ? item.byline : ''),
         abstract: (item.hasOwnProperty('abstract') ? item.abstract : ''),
         height: (item.hasOwnProperty('height') ? item.height : ''),
@@ -205,7 +205,7 @@ var TreeTimeLine = React.createClass({
       .tickSize(0)
       .tickPadding(20)
 
-    var svg = d3.select('#d3container').append('svg')
+    var svg = d3.select('#d3canvas').append('svg')
       .attr('class', 'timeLine')
       .attr('width', width)
       .attr('height', this.state.height - 100)
@@ -220,7 +220,7 @@ var TreeTimeLine = React.createClass({
       })
       .attr({
         fill: 'none',
-        stroke: '#000',
+        stroke: 'lightsteelblue',
         'shape-rendering': 'crispEdges',
       })
       .call(yAxis);
