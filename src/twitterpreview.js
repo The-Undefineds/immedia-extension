@@ -18,12 +18,6 @@ window.twttr = (function(d, s, id) {
 
 var TwitterPreview = React.createClass({
 
-  // getInitialState: function(){
-  //   return {
-  //     renderCount: 0,
-  //   }
-  // },
-
   twitterStyles: {
     height: '600px',
     width: '600px',
