@@ -2,7 +2,7 @@
 
 var previewStyles = {
   preview: {
-    color: '#00BFFF',
+    color: 'black',
     fontFamily: 'Nunito',
     position: 'fixed',
     paddingRight: '10px',
@@ -36,7 +36,7 @@ var Preview = React.createClass({
 
     return (
       React.createElement('div', { id : 'previewContent', style : previewStyles.preview},
-        this.props.previewItem.source === '' ?  React.createElement(EmptyPreview, { windowHeight: this.state.height, windowWidth: this.state.width }) : null,
+        this.props.previewItem.source === '' ?  null : null,
         this.props.previewItem.source === 'nyt' ?  React.createElement(NytPreview, { previewItem : this.props.previewItem }) : null,
         this.props.previewItem.source === 'twitter' ?  React.createElement(TwitterPreview, { previewItem : this.props.previewItem, width : previewStyles.preview.width, height : previewStyles.preview.height }) : null,
         this.props.previewItem.source === 'youtube' ?  React.createElement(YouTubePreview, { previewItem : this.props.previewItem, width : previewStyles.preview.width, height : previewStyles.preview.height }) : null

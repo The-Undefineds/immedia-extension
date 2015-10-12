@@ -9,6 +9,7 @@ var NytStyles = {
     marginTop: '0px',
     marginBottom: '10px',
     textAlign: 'center',
+    color: '#00BFFF',
   },
   byline: {
     marginTop: '5px',

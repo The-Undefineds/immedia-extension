@@ -103,7 +103,7 @@ var ResultsComponent = React.createClass({
   render: function(){
     this.getDynamicStyles();
     return (
-      React.createElement('div', {id: "results", style: this.styles.results, onClick: this.closeModal()},
+      React.createElement('div', {id: "results", style: this.styles.results, onClick: this.closeModal },
         React.createElement('div', {id: "modal-d3", style: this.styles.d3}, 
           React.createElement(TreeTimeLine, {mouseOver: this.mouseOver, windowHeight: this.state.height, windowWidth: this.state.width})
         ), 
