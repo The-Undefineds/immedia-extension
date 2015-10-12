@@ -85,6 +85,14 @@ var ResultsComponent = React.createClass({
     
   },
 
+  closeModal: function(){
+    $(document).on("keyup", function (e) {
+        if (e.which == 27) {
+          $('div').remove('#extension');
+        }
+    }); 
+  },
+
   getDynamicStyles: function() {
     //d3Styles.container.left = (this.state.width - 1350 > 0 ? (this.state.width - 1350) / 2 : 5) + 'px';
     this.styles.d3.width = (this.state.width - 1350 < 0 ? 350 * (this.state.width/1350) : 350) + 'px';
