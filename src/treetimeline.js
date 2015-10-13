@@ -5,15 +5,19 @@ var i = 0;
 var d3Styles = {
   container: {
     position: 'absolute',
-    top: '55px',
-    left: '5px',
-    marginTop: '25px',
+    top: '0px',
+    left: '0px',
+    marginTop: '0px',
+    paddingTop: '0px',
+    width: '320px',
+    height: '500px',
+
   },
   title: {
     fontFamily: 'Serif',
     fontSize: '24px',
-    color: 'black',
-    marginTop: '25px',
+    color: '#00BFFF',
+    // marginTop: '25px',
     marginBottom: '1px',
     textAlign: 'left',
     paddingLeft: '5px',
@@ -22,11 +26,12 @@ var d3Styles = {
     position: 'absolute',
     top: '40px',
     borderRight: 'solid 1px gray',
+    // backgroundColor: 'white',
   },
   treeBox: {
-    borderTop: 'solid 1px gray',
-    borderLeft: 'solid 1ps gray',
-  }
+    border: 'solid 1px #00BFFF',
+    backgroundColor: 'white',
+  },
 };
 
 var TreeTimeLine = React.createClass({
@@ -142,7 +147,10 @@ var TreeTimeLine = React.createClass({
     this.getDynamicStyles();
     
     return (
-      React.createElement('div', { style : d3Styles.container},
+      React.createElement('div', { id: 'd3container', style : d3Styles.container },
+        React.createElement('div', { style: {textAlign: 'center'} },
+         React.createElement('img', { id: 'logo', style: {width: '100px', height: '100px', opacity: '.0' }, src: chrome.extension.getURL('assets/immedia.png') })
+        ),
         React.createElement('span', { id : 'd3title', style : d3Styles.title }, 'recent media'),
         React.createElement('div', { id : 'd3canvas', style: d3Styles.treeBox })
       )
@@ -151,7 +159,7 @@ var TreeTimeLine = React.createClass({
 
   getDynamicStyles: function() {
     // d3Styles.container.left = (this.state.width - 1350 > 0 ? (this.state.width - 1350) / 2 : 5) + 'px';
-    d3Styles.container.width = (this.state.width - 1350 < 0 ? 350 * (this.state.width/1350) : 350) + 'px';
+    d3Styles.container.width = (this.state.width - 1350 < 0 ? 330 * (this.state.width/1350) : 330) + 'px';
     d3Styles.container.height = (this.dates.length*60) + 'px';
     return;
   },
