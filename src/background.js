@@ -1,4 +1,3 @@
-var searchTerm;
 var extensionMounted;
 chrome.tabs.onUpdated.addListener(function(id, info, tab){
   if(tab.url.match(/wikipedia.org/g)){
@@ -18,18 +17,14 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab){
     chrome.tabs.executeScript(null, {file: "./src/twitterpreview.js"});
     chrome.tabs.executeScript(null, {file: "./src/youtubepreview.js"});
 
-    //Once on the page, parse the url for the search term
-    chrome.tabs.query({active: true, currentWindow: true}, function(results){
-      searchTerm = parseUrl(results[0].url);
-    });
-
     chrome.pageAction.show(tab.id);
     
   }
 });
 
 chrome.runtime.onMessage.addListener(function(message, sender){
-  handleQuery(message);
+  var searchTerm = parseUrl(sender.url);
+  handleQuery(message, searchTerm);
 });
 
 chrome.pageAction.onClicked.addListener(function(tab){
@@ -39,9 +34,6 @@ chrome.pageAction.onClicked.addListener(function(tab){
   }
   else{
     chrome.tabs.executeScript(null, {code: "$(\'div\').remove(\'#extension\')"})
-    //tabs need to reload unless, searchterm is not mounted to be searched
-    //only random youtube videos appear
-    chrome.tabs.reload();
     extensionMounted = false
   }
   
@@ -53,17 +45,16 @@ function parseUrl(url){
   return resultURL.replace(/_/g, ' ');
 }
 
-function handleQuery(searchQuery, results){
+function handleQuery(searchQuery, searchTerm){
   searchQuery.searchTerm = searchTerm;  
   $.post(searchQuery.url, searchQuery)
-   .done(function(response) {
-    checkTabs(response);
+    .done(function(response) {
+      checkTabs(response);
       console.log('Post request was a Success...Here is the response', response)
    });
 }
 
 function checkTabs(response){
-  console.log('checkTabs', response);
   chrome.tabs.query({active:true}, function(tabs){
     chrome.tabs.executeScript(null, {file: "./assets/twitter.js"});
     chrome.tabs.sendMessage(tabs[0].id, response);               
