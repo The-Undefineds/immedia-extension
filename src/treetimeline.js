@@ -44,7 +44,7 @@ var TreeTimeLine = React.createClass({
 
   apis: [
     'nyt',
-    'twitter',
+    // 'twitter',
     'youtube',
     // 'news'
   ],
@@ -157,10 +157,10 @@ var TreeTimeLine = React.createClass({
   },
 
   mouseOver: function(item) {
-    if (this.mousedOver === item) {
-      return;
-    } else {
-      this.mousedOver = item;
+    if (this.mousedOver === item && $('#preview').html() !== "") {  // This line ensures that preview box doesn't accidentally reload when 
+      return;                                                       // mouseover occurs over the preview currently being viewed,
+    } else {                                                        // and the second predicate ensures that this does not deactivate
+      this.mousedOver = item;                                       // other mouseovers after the box has been exited
     }
     this.props.mouseOver({
         title: item.title,
