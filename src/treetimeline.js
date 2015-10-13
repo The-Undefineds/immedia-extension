@@ -7,12 +7,13 @@ var d3Styles = {
     position: 'absolute',
     top: '55px',
     left: '5px',
+    marginTop: '25px',
   },
   title: {
-    fontFamily: 'Avenir',
+    fontFamily: 'Serif',
     fontSize: '24px',
-    color: '#00BFFF',
-    marginTop: '5px',
+    color: 'black',
+    marginTop: '25px',
     marginBottom: '1px',
     textAlign: 'left',
     paddingLeft: '5px',
@@ -21,6 +22,10 @@ var d3Styles = {
     position: 'absolute',
     top: '40px',
     borderRight: 'solid 1px gray',
+  },
+  treeBox: {
+    borderTop: 'solid 1px gray',
+    borderLeft: 'solid 1ps gray',
   }
 };
 
@@ -138,8 +143,8 @@ var TreeTimeLine = React.createClass({
     
     return (
       React.createElement('div', { style : d3Styles.container},
-        React.createElement('span', { id : 'd3title', style : d3Styles.title }, 'recent events'),
-        React.createElement('div', { id : 'd3canvas'})
+        React.createElement('span', { id : 'd3title', style : d3Styles.title }, 'recent media'),
+        React.createElement('div', { id : 'd3canvas', style: d3Styles.treeBox })
       )
     );
   },
