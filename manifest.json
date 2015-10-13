@@ -14,5 +14,7 @@
     "persistent": false
   },
 
-  "permissions": ["activeTab", "tabs", "*://*.wikipedia.org/*", "*://*.immedia.xyz/*"]
+  "permissions": ["activeTab", "tabs", "*://*.wikipedia.org/*", "*://*.immedia.xyz/*"],
+
+  "web_accessible_resources": ["assets/exit.png", "assets/immedia.png"]
 }
