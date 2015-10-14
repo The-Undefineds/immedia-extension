@@ -20,13 +20,13 @@ var ResultsComponent = React.createClass({
   componentDidMount: function(){
     var component = this;
     window.addEventListener('resize', this.handleResize);
-    this.renderPreview({source: ''});
+    // this.renderPreview({source: ''});
 
   },
 
   componentWillReceiveProps: function() {
     this.item = {source: ''};
-    this.renderPreview(this.item);
+    // this.renderPreview(this.item);
   },
 
   componentWillMount: function() {
@@ -41,22 +41,21 @@ var ResultsComponent = React.createClass({
   item: {source: ''},
 
   renderPreview: function(item) {
-    // React.render(
-    //   React.createElement(Preview, {previewItem: item, windowHeight: this.state.height, windowWidth: this.state.width}),
-    //   document.getElementById('modal-d3')
-    // )
+    React.render(
+      React.createElement(Preview, {previewItem: item, windowHeight: this.state.height, windowWidth: this.state.width}),
+      document.getElementById('preview')
+    )
   },
 
   handleResize: function(e) {
-    this.setState({
-      width: window.innerWidth,
-      height: window.innerHeight,
-    });
-    this.renderPreview(this.item);
+    // this.setState({
+    //   width: window.innerWidth,
+    //   height: window.innerHeight,
+    // });
   },
 
   mouseOver: function(item){   
-    this.setState({ previewing: item });
+    this.renderPreview(item);
   },
 
   styles: {
@@ -90,13 +89,13 @@ var ResultsComponent = React.createClass({
     
   },
 
-  closeModal: function(){
-    $(document).on("keyup", function (e) {
-        if (e.which == 27) {
-          $('div').remove('#extension');
-        }
-    }); 
-  },
+  // closeModal: function(){
+  //   $(document).on("keyup", function (e) {
+  //       if (e.which == 27) {
+  //         $('div').remove('#extension');
+  //       }
+  //   }); 
+  // },
 
   // getDynamicStyles: function() {
   //   //d3Styles.container.left = (this.state.width - 1350 > 0 ? (this.state.width - 1350) / 2 : 5) + 'px';
@@ -105,16 +104,40 @@ var ResultsComponent = React.createClass({
   //   return;
   // },
 
+  exitModal: function(event){
+    console.log('key ', event.which);
+  },
+
   render: function(){
+    var showingLogo;
+
+    $(document).on("keyup", function (e) {
+        if (e.which == 27) {
+          $('#preview').empty();
+        }
+    })
+
+    .on("scroll", function () {
+      var scrollOffset = $('#d3container').offset().top;
+      console.log(scrollOffset)
+      if (!showingLogo && scrollOffset > 160) {
+        showingLogo = true;
+        $('#logo').css({ opacity: '.8' });
+      } else if (showingLogo && scrollOffset <= 160) {
+        showingLogo = false;
+        $('#logo').css({ opacity: '.0' });
+      }
+    });
+
     // this.getDynamicStyles();
     return (
-      // React.createElement('div', {id: "results", style: this.styles.results, onClick: this.closeModal },
+      React.createElement('div', {id: "results" },
         React.createElement('div', {id: "modal-d3", style: this.styles.d3}, 
-          React.createElement(TreeTimeLine, {mouseOver: this.mouseOver, windowHeight: this.state.height, windowWidth: this.state.width}),
-          this.state.previewing ? React.createElement(Preview, {previewItem: this.state.previewing, windowHeight: this.state.height, windowWidth: this.state.width}) : null
-        )//,
-      //   React.createElement('div', {id: "preview"}) 
-      // )
+          React.createElement(TreeTimeLine, {mouseOver: this.mouseOver, windowHeight: this.state.height, windowWidth: this.state.width})
+          // this.state.previewing ? React.createElement(Preview, {previewItem: this.state.previewing, windowHeight: this.state.height, windowWidth: this.state.width}) : null
+        ),
+        React.createElement('div', {id: "preview"}) 
+      )
     )
   }
 
