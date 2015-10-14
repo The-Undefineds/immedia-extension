@@ -55,11 +55,12 @@ var TreeTimeLine = React.createClass({
   ],
 
   query: function(searchTerm){
+    var bodyWidth = $('.mediawiki').width();
     for(var i = 0; i < this.apis.length; i++){
       chrome.runtime.sendMessage({
         url: 'http://immedia.xyz/api/' + this.apis[i],
         api: this.apis[i],
-        bodyWidth: bodyWidth.toString() + 'px'
+        bodyWidth: bodyWidth
       });
     }
   },

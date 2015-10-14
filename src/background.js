@@ -41,6 +41,7 @@ chrome.pageAction.onClicked.addListener(function(tab){
     d3On = true;
   }
   else{
+    bodyWidth = (bodyWidth + 350).toString() + 'px';
     chrome.tabs.executeScript(null, {code: "$(\'div\').remove(\'#extension\')"});
     d3On = false;
 

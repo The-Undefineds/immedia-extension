@@ -1,7 +1,6 @@
 // document.body.innerHTML = '';
 var container = document.createElement('div');
 container.id = 'extension';
-var bodyWidth;
 
 if(document.getElementById('extension') === null){
   document.body.appendChild(container);
@@ -31,7 +30,6 @@ var ResultsComponent = React.createClass({
   },
 
   componentWillMount: function() {
-    bodyWidth = $('.mediawiki').width();
     $('.mediawiki').width(window.innerWidth-350);
     $('.mediawiki').css({'margin-left': '350px'});
   },
