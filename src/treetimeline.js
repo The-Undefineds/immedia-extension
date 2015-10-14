@@ -58,7 +58,8 @@ var TreeTimeLine = React.createClass({
     for(var i = 0; i < this.apis.length; i++){
       chrome.runtime.sendMessage({
         url: 'http://immedia.xyz/api/' + this.apis[i],
-        api: this.apis[i]
+        api: this.apis[i],
+        bodyWidth: bodyWidth.toString() + 'px'
       });
     }
   },

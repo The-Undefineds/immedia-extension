@@ -1,6 +1,7 @@
 // document.body.innerHTML = '';
-var container = document.createElement('div')
+var container = document.createElement('div');
 container.id = 'extension';
+var bodyWidth;
 
 if(document.getElementById('extension') === null){
   document.body.appendChild(container);
@@ -18,7 +19,7 @@ var ResultsComponent = React.createClass({
   },
 
   componentDidMount: function(){
-    var component = this;
+    // var component = this;
     window.addEventListener('resize', this.handleResize);
     // this.renderPreview({source: ''});
 
@@ -30,6 +31,7 @@ var ResultsComponent = React.createClass({
   },
 
   componentWillMount: function() {
+    bodyWidth = $('.mediawiki').width();
     $('.mediawiki').width(window.innerWidth-350);
     $('.mediawiki').css({'margin-left': '350px'});
   },
