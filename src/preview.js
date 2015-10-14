@@ -22,6 +22,7 @@ var previewStyles = {
     width: '18px',
     height: '18px',
     position: 'absolute',
+    cursor: 'pointer',
     top: '0px',
     left: '0px' // Make this '623px' to move the exit button to the top, right-hand, corner
   }
