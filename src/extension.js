@@ -117,17 +117,24 @@ var ResultsComponent = React.createClass({
         }
     })
 
-    .on("scroll", function () {
-      var scrollOffset = $('#d3container').offset().top;
-      console.log(scrollOffset)
-      if (!showingLogo && scrollOffset > 160) {
-        showingLogo = true;
-        $('#logo').css({ opacity: '.8' });
-      } else if (showingLogo && scrollOffset <= 160) {
-        showingLogo = false;
-        $('#logo').css({ opacity: '.0' });
+    // .on("scroll", function () {
+    //   var scrollOffset = $('#d3container').offset().top;
+    //   if (!showingLogo && scrollOffset > 160) {
+    //     showingLogo = true;
+    //     $('#logo').css({ opacity: '.8' });
+    //   } else if (showingLogo && scrollOffset <= 160) {
+    //     showingLogo = false;
+    //     $('#logo').css({ opacity: '.0' });
+    //   }
+    // })
+
+    .on("click", function(event){
+      console.log('click ', event.clientX, event.clientY)
+      if (!(event.clientX < 1170 && event.clientY < 455)) {
+        console.log('emptying')
+        $('#preview').empty();
       }
-    });
+    })
 
     // this.getDynamicStyles();
     return (
