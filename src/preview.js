@@ -23,7 +23,7 @@ var previewStyles = {
     height: '18px',
     position: 'absolute',
     top: '0px',
-    left: '623px'
+    left: '0px' // Make this '623px' to move the exit button to the top, right-hand, corner
   }
 };
 
