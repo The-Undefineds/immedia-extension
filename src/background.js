@@ -1,5 +1,7 @@
-var extensionMounted;
-var d3On;
+var extensionMounted,
+    d3On,
+    bodyWidth;    // For storing the width of wiki's displaced body, so
+                  // that we can return it back to normal when extension is deactivated
 chrome.tabs.onUpdated.addListener(function(id, info, tab){
   extensionMounted = false;
   d3On = false;
@@ -30,6 +32,7 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab){
 chrome.runtime.onMessage.addListener(function(message, sender){
   var searchTerm = parseUrl(sender.url);
   handleQuery(message, searchTerm);
+  bodyWidth = message.bodyWidth;
 });
 
 chrome.pageAction.onClicked.addListener(function(tab){
@@ -38,12 +41,12 @@ chrome.pageAction.onClicked.addListener(function(tab){
     d3On = true;
   }
   else{
-    chrome.tabs.executeScript(null, {code: "$(\'div\').remove(\'#extension\')"})
-
-    //tabs need to reload unless, searchterm is not mounted to be searched
-    //only random youtube videos appear
-    // chrome.tabs.reload();
+    chrome.tabs.executeScript(null, {code: "$(\'div\').remove(\'#extension\')"});
     d3On = false;
+
+    // Resizes and puts body back to original dimensions
+    chrome.tabs.executeScript(null, {code: "$(\'.mediawiki\').css(\'margin-left\',\'0px\')"});
+    chrome.tabs.executeScript(null, {code: "$(\'.mediawiki\').css(\'width\',\'" + bodyWidth + "\')"});
   }
   
 })
