@@ -3,6 +3,7 @@ var TwitterPreview = React.createClass({
   twitterStyles: {
     height: '600px',
     width: '600px',
+    textAlign: 'center'
   },
 
 
@@ -17,7 +18,7 @@ var TwitterPreview = React.createClass({
   },
 
   embedTweet: function(tweetId) {
-    $('#twitterPreview').append('<div id="tweet"></div>')
+    $('#twitterPreview').append('<div id="tweet" style="margin-left:65px;margin-top:90px"></div>')
     
     script = document.getElementById('embedTweet');
     if (script !== null) script.parentNode.removeChild(script);
@@ -26,17 +27,15 @@ var TwitterPreview = React.createClass({
     embedTweet.id='embedTweet';
     embedTweet.type= 'text/javascript';
     embedTweet.innerHTML = "twttr.widgets.createTweet('"+tweetId+"', document.getElementById('tweet'));";
-    
+
     script = document.getElementsByTagName('SCRIPT')[0];
     script.parentNode.insertBefore(embedTweet, script);
   },
 
   render: function() {
-
     return (
-      React.createElement('div', { id:'twitterPreview', style: this.twitterStyles})
+      React.createElement('div', { id:'twitterPreview' })
       )
-
   }
 
 });
