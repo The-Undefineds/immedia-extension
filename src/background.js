@@ -4,7 +4,8 @@ var extensionMounted,
                   // that we can return it back to normal when extension is deactivated
 chrome.tabs.onUpdated.addListener(function(id, info, tab){
   extensionMounted = false;
-  if(tab.url.match(/wikipedia.org/g)){
+  console.log('tab: ', tab);
+  if(tab.url.match(/wikipedia.org\/wiki/g) && tab.status === 'complete'){
     if (!extensionMounted){
       extensionMounted = true;
       chrome.tabs.executeScript(null, {file: "./assets/jquery.min.js"});
@@ -34,6 +35,9 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab){
 
 chrome.runtime.onMessage.addListener(function(message, sender){
   var searchTerm = parseUrl(sender.url);
+  if (searchTerm === 'Main Page') {
+    searchTerm = 'immediahomepage';
+  }
   handleQuery(message, searchTerm);
   bodyWidth = message.bodyWidth;
 });
