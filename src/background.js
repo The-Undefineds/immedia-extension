@@ -10,7 +10,7 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab){
     chrome.tabs.executeScript(null, {file: "./assets/youtube1.js"});
     chrome.tabs.executeScript(null, {file: "./assets/youtube2.js"});
 
-    // chrome.tabs.executeScript(null, {file: "./src/loadmeta.js"}); //used to stop the Twitter error msg
+    chrome.tabs.executeScript(null, {file: "./src/loadmeta.js"}); //used to stop the Twitter error msg
     chrome.tabs.executeScript(null, {file: "./src/treetimeline.js"});
     chrome.tabs.executeScript(null, {file: "./src/preview.js"});
     chrome.tabs.executeScript(null, {file: "./src/emptypreview.js"});

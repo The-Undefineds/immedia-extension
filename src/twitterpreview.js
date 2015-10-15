@@ -29,18 +29,23 @@ var TwitterPreview = React.createClass({
   },
 
   componentDidUpdate: function() {
+
     $('#twitterPreview').empty();
     var twitterItem = this.props.previewItem;
     this.embedTweet(twitterItem.tweetId);
   },
 
   embedTweet: function(tweetId) {
-  
-    $('#twitterPreview').append('<div id="tweet"></div>')
-    twttr.widgets.createTweet(tweetId, document.getElementById('extension'), {
-      theme: 'dark'
-    })
+    $('#twitterPreview').append('<webview id="tweet" src="https://platform.twitter.com/widgets.js" style="width:640px; height:480px"></webview>');
+
     console.log(twttr.widgets.createTweet)
+    var webview = document.getElementById('tweet');
+    webview.addEventListener("loadstart", function(){
+      twttr.widgets.createTweet("'"+ tweetId + "'", document.getElementById('tweet'), {
+        theme: 'dark'
+      });
+    })
+
     // $('#tweet').html('Hello World');
     
   },
