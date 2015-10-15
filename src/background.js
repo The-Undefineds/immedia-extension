@@ -1,34 +1,31 @@
-var extensionMounted,
-    // d3On,
-    bodyWidth;    // For storing the width of wiki's displaced body, so
+var bodyWidth;    // For storing the width of wiki's displaced body, so
                   // that we can return it back to normal when extension is deactivated
+
 chrome.tabs.onUpdated.addListener(function(id, info, tab){
-  extensionMounted = false;
-  console.log('tab: ', tab);
-  if(tab.url.match(/wikipedia.org\/wiki/g) && tab.status === 'complete'){
-    if (!extensionMounted){
-      extensionMounted = true;
-      chrome.tabs.executeScript(null, {file: "./assets/jquery.min.js"});
-      chrome.tabs.executeScript(null, {file: "./assets/d3.min.js"});
-      chrome.tabs.executeScript(null, {file: "./assets/react.js"});
-      chrome.tabs.executeScript(null, {file: "./assets/youtube1.js"});
-      chrome.tabs.executeScript(null, {file: "./assets/youtube2.js"});
-      chrome.tabs.executeScript(null, {code: "window.twttr = (function(d, s, id) {var js, fjs = d.getElementsByTagName(s)[0],t = window.twttr || {};if (d.getElementById(id)) return t;js = d.createElement(s);js.id = id;js.src = '  https://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js, fjs);t._e = [];t.ready = function(f) {t._e.push(f);};return t;}(document, 'script', 'twitter-wjs'));"});
+  
+  if(tab.url.match(/wikipedia.org\/wiki/g) && tab.status === 'loading'){
 
-      // chrome.tabs.executeScript(null, {file: "./src/loadmeta.js"}); //used to stop the Twitter error msg
-      chrome.tabs.executeScript(null, {file: "./src/treetimeline.js"});
-      chrome.tabs.executeScript(null, {file: "./src/preview.js"});
-      chrome.tabs.executeScript(null, {file: "./src/emptypreview.js"});
-      chrome.tabs.executeScript(null, {file: "./src/nytpreview.js"});
-      chrome.tabs.executeScript(null, {file: "./src/twitterpreview.js"});
-      chrome.tabs.executeScript(null, {file: "./src/youtubepreview.js"});
+    chrome.tabs.executeScript(null, {file: "./assets/jquery.min.js"});
+    chrome.tabs.executeScript(null, {file: "./assets/d3.min.js"});
+    chrome.tabs.executeScript(null, {file: "./assets/react.js"});
+    chrome.tabs.executeScript(null, {file: "./assets/youtube1.js"});
+    chrome.tabs.executeScript(null, {file: "./assets/youtube2.js"});
+    chrome.tabs.executeScript(null, {code: "window.twttr = (function(d, s, id) {var js, fjs = d.getElementsByTagName(s)[0],t = window.twttr || {};if (d.getElementById(id)) return t;js = d.createElement(s);js.id = id;js.src = '  https://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js, fjs);t._e = [];t.ready = function(f) {t._e.push(f);};return t;}(document, 'script', 'twitter-wjs'));"});
 
-      if (localStorage['immedia.chrome'] === 'on') {                      // If they previously had the extension activated, when 
-        chrome.tabs.executeScript(null, {file: "./src/extension.js"});    // going to a new page the extension will be activated
-      }
+    // chrome.tabs.executeScript(null, {file: "./src/loadmeta.js"}); //used to stop the Twitter error msg
+    chrome.tabs.executeScript(null, {file: "./src/treetimeline.js"});
+    chrome.tabs.executeScript(null, {file: "./src/preview.js"});
+    chrome.tabs.executeScript(null, {file: "./src/emptypreview.js"});
+    chrome.tabs.executeScript(null, {file: "./src/nytpreview.js"});
+    chrome.tabs.executeScript(null, {file: "./src/twitterpreview.js"});
+    chrome.tabs.executeScript(null, {file: "./src/youtubepreview.js"});
+
+    // "shows the icon" -Joel
+    chrome.pageAction.show(tab.id);
+
+    if (localStorage['immedia.chrome'] === 'on') {                       // If they previously had the extension activated, when 
+      chrome.tabs.executeScript(null, {file: "./src/extension.js"});     // going to a new page the extension will be activated
     }
-
-  chrome.pageAction.show(tab.id);
   }
 
 });
