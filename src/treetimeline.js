@@ -7,20 +7,20 @@ var d3Styles = {
     position: 'absolute',
     top: '0px',
     left: '0px',
-    marginTop: '0px',
+    marginTop: '30px',
     paddingTop: '0px',
-    width: '320px',
     height: '500px',
-    marginTop: '60px'
+    textAlign: 'left',
   },
   title: {
     fontFamily: 'Serif',
     fontSize: '24px',
-    color: '#00BFFF',
+    color: 'black',
     // marginTop: '25px',
-    marginBottom: '1px',
-    textAlign: 'left',
+    marginBottom: '10px',
     paddingLeft: '5px',
+    borderBottom: '1px solid gray',
+    width: '370px',
   },
   d3: {
     position: 'absolute',
@@ -29,8 +29,10 @@ var d3Styles = {
     // backgroundColor: 'white',
   },
   treeBox: {
-    // border: 'solid 1px #00BFFF',
+    // border: 'solid 1px #a7d7f9',
+    // marginTop: '15px',
     // backgroundColor: 'white',
+    // width: '384px',
   },
 };
 
@@ -48,10 +50,10 @@ var TreeTimeLine = React.createClass({
   },
 
   apis: [
-    'nyt',
+    // 'nyt',
     'twitter',
-    'youtube',
-    // 'news'
+    // 'news',
+    'youtube'
   ],
 
   query: function(searchTerm){
@@ -70,7 +72,6 @@ var TreeTimeLine = React.createClass({
     this.query();
     $(window).scroll(function() {
        if($(window).scrollTop() + $(window).height() > $(document).height() - 50) {
-           console.log("bottom!");
            if (component.dates.length > 30) {
             return;
            }
@@ -153,7 +154,7 @@ var TreeTimeLine = React.createClass({
         // React.createElement('div', { style: {textAlign: 'center'} },
         //  React.createElement('img', { id: 'logo', style: {width: '100px', height: '100px', opacity: '.8', marginTop: '10px' }, src: chrome.extension.getURL('assets/immedia.png') })
         // ),
-        React.createElement('span', { id : 'd3title', style : d3Styles.title }, 'recent media'),
+        React.createElement('div', { id : 'd3title', style : d3Styles.title }, 'Recent Media'),
         React.createElement('div', { id : 'd3canvas', style: d3Styles.treeBox })
       )
     );
@@ -178,7 +179,7 @@ var TreeTimeLine = React.createClass({
         url: item.url,
         img: item.img,
         source: item.parent.source,
-        id: item.id,
+        id: item.videoId,
         tweetId: item.tweet_id_str,
         byline: (item.hasOwnProperty('byline') ? item.byline : ''),
         abstract: (item.hasOwnProperty('abstract') ? item.abstract : ''),

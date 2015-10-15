@@ -20,7 +20,7 @@ var ResultsComponent = React.createClass({
   componentDidMount: function(){
     // var component = this;
     window.addEventListener('resize', this.handleResize);
-    // this.renderPreview({source: ''});
+    this.renderPreview({source: ''});
 
   },
 
@@ -30,8 +30,8 @@ var ResultsComponent = React.createClass({
   },
 
   componentWillMount: function() {
-    $('.mediawiki').width(window.innerWidth-350);
-    $('.mediawiki').css({'margin-left': '350px'});
+    $('.mediawiki').width(window.innerWidth-400);
+    $('.mediawiki').css({'margin-left': '400px'});
   },
 
   componentWillUnmount: function() {
@@ -71,7 +71,7 @@ var ResultsComponent = React.createClass({
       // backgroundColor: 'rgba(0,0,0,.6)',
     },
     d3: {
-      top: '30px',
+      top: '290px',
       left: '180px',
       width: '350px',
       height: '100%',
@@ -128,13 +128,13 @@ var ResultsComponent = React.createClass({
     //   }
     // })
 
-    .on("click", function(event){
-      console.log('click ', event.clientX, event.clientY)
-      if (!(event.clientX < 1170 && event.clientY < 455)) {
-        console.log('emptying')
-        $('#preview').empty();
-      }
-    })
+    // .on("click", function(event){
+    //   if (!(event.clientX < 1170 && event.clientY < 455)) {
+
+    //     $('#preview').empty();
+    //   }
+    //   console.log(event);
+    // })
 
     // this.getDynamicStyles();
     return (

@@ -1,10 +1,9 @@
 var extensionMounted,
-    d3On,
+    // d3On,
     bodyWidth;    // For storing the width of wiki's displaced body, so
                   // that we can return it back to normal when extension is deactivated
 chrome.tabs.onUpdated.addListener(function(id, info, tab){
   extensionMounted = false;
-  d3On = false;
   if(tab.url.match(/wikipedia.org/g)){
     if (!extensionMounted){
       extensionMounted = true;
@@ -23,10 +22,14 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab){
       chrome.tabs.executeScript(null, {file: "./src/twitterpreview.js"});
       chrome.tabs.executeScript(null, {file: "./src/youtubepreview.js"});
 
+      if (localStorage['immedia.chrome'] === 'on') {                      // If they previously had the extension activated, when 
+        chrome.tabs.executeScript(null, {file: "./src/extension.js"});    // going to a new page the extension will be activated
+      }
     }
 
   chrome.pageAction.show(tab.id);
   }
+
 });
 
 chrome.runtime.onMessage.addListener(function(message, sender){
@@ -36,16 +39,17 @@ chrome.runtime.onMessage.addListener(function(message, sender){
 });
 
 chrome.pageAction.onClicked.addListener(function(tab){
-  if(d3On === false){
+  var d3On = localStorage['immedia.chrome'] || 'off';
+  if(d3On === 'off'){
     chrome.tabs.executeScript(null, {file: "./src/extension.js"})
-    d3On = true;
+    localStorage['immedia.chrome'] = 'on';
   }
   else{
-    bodyWidth = (bodyWidth + 350).toString() + 'px';
     chrome.tabs.executeScript(null, {code: "$(\'div\').remove(\'#extension\')"});
-    d3On = false;
+    localStorage['immedia.chrome'] = 'off';
 
     // Resizes and puts body back to original dimensions
+    bodyWidth = (bodyWidth + 400).toString() + 'px';
     chrome.tabs.executeScript(null, {code: "$(\'.mediawiki\').css(\'margin-left\',\'0px\')"});
     chrome.tabs.executeScript(null, {code: "$(\'.mediawiki\').css(\'width\',\'" + bodyWidth + "\')"});
   }
