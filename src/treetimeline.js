@@ -5,14 +5,19 @@ var i = 0;
 var d3Styles = {
   container: {
     position: 'absolute',
-    top: '55px',
-    left: '5px',
+    top: '0px',
+    left: '0px',
+    marginTop: '0px',
+    paddingTop: '0px',
+    width: '320px',
+    height: '500px',
+    marginTop: '60px'
   },
   title: {
-    fontFamily: 'Avenir',
+    fontFamily: 'Serif',
     fontSize: '24px',
     color: '#00BFFF',
-    marginTop: '5px',
+    // marginTop: '25px',
     marginBottom: '1px',
     textAlign: 'left',
     paddingLeft: '5px',
@@ -21,7 +26,12 @@ var d3Styles = {
     position: 'absolute',
     top: '40px',
     borderRight: 'solid 1px gray',
-  }
+    // backgroundColor: 'white',
+  },
+  treeBox: {
+    // border: 'solid 1px #00BFFF',
+    // backgroundColor: 'white',
+  },
 };
 
 var TreeTimeLine = React.createClass({
@@ -45,10 +55,12 @@ var TreeTimeLine = React.createClass({
   ],
 
   query: function(searchTerm){
+    var bodyWidth = $('.mediawiki').width();
     for(var i = 0; i < this.apis.length; i++){
       chrome.runtime.sendMessage({
         url: 'http://immedia.xyz/api/' + this.apis[i],
-        api: this.apis[i]
+        api: this.apis[i],
+        bodyWidth: bodyWidth
       });
     }
   },
@@ -137,25 +149,28 @@ var TreeTimeLine = React.createClass({
     this.getDynamicStyles();
     
     return (
-      React.createElement('div', { style : d3Styles.container},
-        React.createElement('span', { id : 'd3title', style : d3Styles.title }, 'recent events'),
-        React.createElement('div', { id : 'd3canvas'})
+      React.createElement('div', { id: 'd3container', style : d3Styles.container },
+        // React.createElement('div', { style: {textAlign: 'center'} },
+        //  React.createElement('img', { id: 'logo', style: {width: '100px', height: '100px', opacity: '.8', marginTop: '10px' }, src: chrome.extension.getURL('assets/immedia.png') })
+        // ),
+        React.createElement('span', { id : 'd3title', style : d3Styles.title }, 'recent media'),
+        React.createElement('div', { id : 'd3canvas', style: d3Styles.treeBox })
       )
     );
   },
 
   getDynamicStyles: function() {
     // d3Styles.container.left = (this.state.width - 1350 > 0 ? (this.state.width - 1350) / 2 : 5) + 'px';
-    d3Styles.container.width = (this.state.width - 1350 < 0 ? 350 * (this.state.width/1350) : 350) + 'px';
+    d3Styles.container.width = (this.state.width - 1350 < 0 ? 330 * (this.state.width/1350) : 330) + 'px';
     d3Styles.container.height = (this.dates.length*60) + 'px';
     return;
   },
 
   mouseOver: function(item) {
-    if (this.mousedOver === item) {
-      return;
-    } else {
-      this.mousedOver = item;
+    if (this.mousedOver === item && $('#preview').html() !== "") {  // This line ensures that preview box doesn't accidentally reload when 
+      return;                                                       // mouseover occurs over the preview currently being viewed,
+    } else {                                                        // and the second predicate ensures that this does not deactivate
+      this.mousedOver = item;                                       // other mouseovers after the box has been exited
     }
     this.props.mouseOver({
         title: item.title,

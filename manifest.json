@@ -14,5 +14,7 @@
     "persistent": false
   },
 
-  "permissions": ["activeTab", "tabs", "*://*.wikipedia.org/*", "*://*.immedia.xyz/*", "*://*.hitthefloor.com/wp-content/uploads/2014/03/20-new-york-times-t-1.jpg/*", "https://platform.twitter.com/widgets.js"]
+  "permissions": ["activeTab", "tabs", "*://*.wikipedia.org/*", "*://*.immedia.xyz/*"],
+
+  "web_accessible_resources": ["assets/exit.png", "assets/immedia.png"]
 }

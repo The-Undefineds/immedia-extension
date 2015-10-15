@@ -1,26 +1,9 @@
-window.twttr = (function(d, s, id) {
-
-  var js, fjs = d.getElementsByTagName(s)[0],
-    t = window.twttr || {};
-  if (d.getElementById(id)) return t;
-  js = d.createElement(s);
-  js.id = id;
-  js.src = "https://platform.twitter.com/widgets.js";
-  fjs.parentNode.insertBefore(js, fjs);
- 
-  t._e = [];
-  t.ready = function(f) {
-    t._e.push(f);
-  };
- 
-  return t;
-}(document, "script", "twitter-wjs"));
-
 var TwitterPreview = React.createClass({
 
   twitterStyles: {
     height: '600px',
     width: '600px',
+    textAlign: 'center'
   },
 
 
@@ -36,26 +19,24 @@ var TwitterPreview = React.createClass({
   },
 
   embedTweet: function(tweetId) {
-    $('#twitterPreview').append('<webview id="tweet" src="https://platform.twitter.com/widgets.js" style="width:640px; height:480px"></webview>');
-
-    console.log(twttr.widgets.createTweet)
-    var webview = document.getElementById('tweet');
-    webview.addEventListener("loadstart", function(){
-      twttr.widgets.createTweet("'"+ tweetId + "'", document.getElementById('tweet'), {
-        theme: 'dark'
-      });
-    })
-
-    // $('#tweet').html('Hello World');
+    $('#twitterPreview').append('<div id="tweet" style="margin-left:65px;margin-top:90px"></div>')
     
+    script = document.getElementById('embedTweet');
+    if (script !== null) script.parentNode.removeChild(script);
+    
+    var embedTweet = document.createElement('SCRIPT');
+    embedTweet.id='embedTweet';
+    embedTweet.type= 'text/javascript';
+    embedTweet.innerHTML = "twttr.widgets.createTweet('"+tweetId+"', document.getElementById('tweet'));";
+
+    script = document.getElementsByTagName('SCRIPT')[0];
+    script.parentNode.insertBefore(embedTweet, script);
   },
 
   render: function() {
-
     return (
-      React.createElement('div', { id:'twitterPreview', style: this.twitterStyles})
+      React.createElement('div', { id:'twitterPreview' })
       )
-
   }
 
 });

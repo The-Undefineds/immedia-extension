@@ -2,17 +2,30 @@
 
 var previewStyles = {
   preview: {
-    color: '#00BFFF',
+    color: 'black',
     fontFamily: 'Nunito',
     position: 'fixed',
-    paddingRight: '10px',
     textAlign: 'center',
-    backgroundColor: 'rgb(237,239,240)',
-    margins: '50px',
-    borderRadius: '4px',
-    overflowY: 'auto',
-    overflowX: 'hidden',
+    border: '1px solid #00BFFF',
+    backgroundColor: 'white',//'rgb(237,239,240)',
+    // borderRadius: '4px',
+    // overflowY: 'auto',
+    // overflowX: 'hidden',
+    overflow: 'scroll',
+    left: '526px',
+    top: '78px',
+    width: '640px',
+    height: '360px',
+    paddingTop: '15px'
   },
+  exitButton: {
+    width: '18px',
+    height: '18px',
+    position: 'absolute',
+    cursor: 'pointer',
+    top: '0px',
+    left: '0px' // Make this '623px' to move the exit button to the top, right-hand, corner
+  }
 };
 
 var Preview = React.createClass({
@@ -31,12 +44,15 @@ var Preview = React.createClass({
     });
   },
 
-  render: function() {
-    this.getDynamicStyles();
+  exit: function(){
+    $('#preview').empty();
+  },
 
+  render: function() {
+    // this.getDynamicStyles();
     return (
       React.createElement('div', { id : 'previewContent', style : previewStyles.preview},
-        this.props.previewItem.source === '' ?  React.createElement(EmptyPreview, { windowHeight: this.state.height, windowWidth: this.state.width }) : null,
+        React.createElement('img', { style: previewStyles.exitButton, onClick: this.exit, src: chrome.extension.getURL('assets/exit.png') }),
         this.props.previewItem.source === 'nyt' ?  React.createElement(NytPreview, { previewItem : this.props.previewItem }) : null,
         this.props.previewItem.source === 'twitter' ?  React.createElement(TwitterPreview, { previewItem : this.props.previewItem, width : previewStyles.preview.width, height : previewStyles.preview.height }) : null,
         this.props.previewItem.source === 'youtube' ?  React.createElement(YouTubePreview, { previewItem : this.props.previewItem, width : previewStyles.preview.width, height : previewStyles.preview.height }) : null
