@@ -7,10 +7,9 @@ var d3Styles = {
     position: 'absolute',
     top: '0px',
     left: '0px',
-    marginTop: '0px',
+    marginTop: '30px',
     paddingTop: '0px',
     height: '500px',
-    marginTop: '300px',
     textAlign: 'left',
   },
   title: {
@@ -51,7 +50,7 @@ var TreeTimeLine = React.createClass({
   },
 
   apis: [
-    'nyt',
+    // 'nyt',
     'twitter',
     // 'news',
     'youtube'

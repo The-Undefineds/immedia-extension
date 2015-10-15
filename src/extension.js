@@ -71,7 +71,7 @@ var ResultsComponent = React.createClass({
       // backgroundColor: 'rgba(0,0,0,.6)',
     },
     d3: {
-      top: '30px',
+      top: '290px',
       left: '180px',
       width: '350px',
       height: '100%',
@@ -133,6 +133,7 @@ var ResultsComponent = React.createClass({
 
     //     $('#preview').empty();
     //   }
+    //   console.log(event);
     // })
 
     // this.getDynamicStyles();
