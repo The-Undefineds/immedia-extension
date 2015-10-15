@@ -6,17 +6,16 @@ var previewStyles = {
     fontFamily: 'Nunito',
     position: 'fixed',
     textAlign: 'center',
-    border: '1px solid #00BFFF',
+    border: '1px solid #a7d7f9',
     backgroundColor: 'white',//'rgb(237,239,240)',
     // borderRadius: '4px',
     // overflowY: 'auto',
     // overflowX: 'hidden',
     overflow: 'scroll',
-    left: '526px',
-    top: '78px',
-    width: '640px',
-    height: '360px',
-    paddingTop: '15px'
+    left: '176px',   //'526px',
+    top: '79px',     //'78px',
+    width: '384px',  //'640px',
+    height: '216px', //'360px',
   },
   exitButton: {
     width: '18px',
@@ -52,10 +51,10 @@ var Preview = React.createClass({
     // this.getDynamicStyles();
     return (
       React.createElement('div', { id : 'previewContent', style : previewStyles.preview},
-        React.createElement('img', { style: previewStyles.exitButton, onClick: this.exit, src: chrome.extension.getURL('assets/exit.png') }),
+        // React.createElement('img', { style: previewStyles.exitButton, onClick: this.exit, src: chrome.extension.getURL('assets/exit.png') }),
         this.props.previewItem.source === 'nyt' ?  React.createElement(NytPreview, { previewItem : this.props.previewItem }) : null,
-        this.props.previewItem.source === 'twitter' ?  React.createElement(TwitterPreview, { previewItem : this.props.previewItem, width : previewStyles.preview.width, height : previewStyles.preview.height }) : null,
-        this.props.previewItem.source === 'youtube' ?  React.createElement(YouTubePreview, { previewItem : this.props.previewItem, width : previewStyles.preview.width, height : previewStyles.preview.height }) : null
+        this.props.previewItem.source === 'twitter' ?  React.createElement(TwitterPreview, { previewItem : this.props.previewItem, width: previewStyles.preview.width, height : previewStyles.preview.height }) : null,
+        this.props.previewItem.source === 'youtube' ?  React.createElement(YouTubePreview, { previewItem : this.props.previewItem }) : null
       )
     );
   },

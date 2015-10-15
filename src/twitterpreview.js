@@ -18,7 +18,7 @@ var TwitterPreview = React.createClass({
   },
 
   embedTweet: function(tweetId) {
-    $('#twitterPreview').append('<div id="tweet" style="margin-left:65px;margin-top:90px"></div>')
+    $('#twitterPreview').append('<div id="tweet" ></div>')
     
     script = document.getElementById('embedTweet');
     if (script !== null) script.parentNode.removeChild(script);
@@ -34,7 +34,7 @@ var TwitterPreview = React.createClass({
 
   render: function() {
     return (
-      React.createElement('div', { id:'twitterPreview' })
+      React.createElement('div', { id:'twitterPreview', style: { margin: '10px' } })
       )
   }
 

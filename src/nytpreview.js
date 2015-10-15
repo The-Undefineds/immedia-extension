@@ -9,12 +9,14 @@ var NytStyles = {
     marginTop: '0px',
     marginBottom: '10px',
     textAlign: 'center',
-    color: '#00BFFF',
+    color: 'black',
+    fontSize: '20px'
   },
   byline: {
-    marginTop: '5px',
-    marginBottom: '5px',
+    marginTop: '2px',
+    marginBottom: '2px',
     textAlign: 'center',
+    fontSize: '10px'
   },
   image: {
     textAlign: 'center',
@@ -44,7 +46,7 @@ var NytPreview = React.createClass({
         React.createElement('div', null,
           React.createElement('h1', { style : NytStyles.headline}, this.props.previewItem.title),
           React.createElement('h3', { style : NytStyles.byline}, this.props.previewItem.byline),
-          this.props.previewItem.img !== '' ? React.createElement('img', { src : this.props.previewItem.img , style : { textAlign : 'center'}, height : this.props.previewItem.height * ratio, width : this.props.previewItem.width * ratio }) : null,
+          this.props.previewItem.img !== '' ? React.createElement('img', { src : this.props.previewItem.img , style : { textAlign : 'left', width: '40%', height: '40%', float: 'left'}, height : this.props.previewItem.height * ratio, width : this.props.previewItem.width * ratio }) : null,
           React.createElement('p', { style : NytStyles.body }, this.props.previewItem.abstract)
         )
       )
