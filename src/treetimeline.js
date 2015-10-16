@@ -14,7 +14,6 @@ var d3Styles = {
     textAlign: 'left',
     overflowY: 'auto',
     width: '384px',
-
   },
   title: {
     fontFamily: 'Serif',
@@ -56,8 +55,8 @@ var TreeTimeLine = React.createClass({
 
   apis: [
     'nyt',
-    // 'twitter',
-    // 'news',
+    'twitter',
+    'news',
     'youtube'
   ],
 
@@ -67,7 +66,8 @@ var TreeTimeLine = React.createClass({
       chrome.runtime.sendMessage({
         url: 'http://immedia.xyz/api/' + this.apis[i],
         api: this.apis[i],
-        days: 30,
+        bodyWidth: bodyWidth,
+        days: 30
       });
     }
   },
