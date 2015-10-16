@@ -1,6 +1,6 @@
 //var StyleSheet = require('react-style');
 
-var i = 0;
+var idCounter = 0;
 
 var d3Styles = {
   container: {
@@ -8,9 +8,13 @@ var d3Styles = {
     top: '0px',
     left: '0px',
     marginTop: '30px',
+    marginBottom: '5px',
     paddingTop: '0px',
-    height: '500px',
+    height: '300px',
     textAlign: 'left',
+    overflowY: 'auto',
+    width: '384px',
+
   },
   title: {
     fontFamily: 'Serif',
@@ -33,6 +37,7 @@ var d3Styles = {
     // marginTop: '15px',
     // backgroundColor: 'white',
     // width: '384px',
+    // overflowY: 'scroll',
   },
 };
 
@@ -50,8 +55,8 @@ var TreeTimeLine = React.createClass({
   },
 
   apis: [
-    // 'nyt',
-    'twitter',
+    'nyt',
+    // 'twitter',
     // 'news',
     'youtube'
   ],
@@ -62,7 +67,7 @@ var TreeTimeLine = React.createClass({
       chrome.runtime.sendMessage({
         url: 'http://immedia.xyz/api/' + this.apis[i],
         api: this.apis[i],
-        bodyWidth: bodyWidth
+        days: 30,
       });
     }
   },
@@ -70,20 +75,14 @@ var TreeTimeLine = React.createClass({
   componentDidMount: function(){
     var component = this;
     this.query();
-    $(window).scroll(function() {
-       if($(window).scrollTop() + $(window).height() > $(document).height() - 50) {
-           if (component.dates.length > 30) {
-            return;
-           }
-           component.setTimeSpan(component.dates.length + 7);
-       }
-    });
+
     chrome.runtime.onMessage.addListener(function(message, sender){
       component.handleQuery(message);
     });
   },
 
   componentWillReceiveProps: function(newProps){
+    this.renderCount = 0;
     this.setState({
       width: newProps.windowWidth,
       height: newProps.windowHeight
@@ -91,6 +90,7 @@ var TreeTimeLine = React.createClass({
   },
 
   handleQuery: function(response){
+    this.renderCount++;
     this.setState(function(previousState, currentProps) {
       var previousApiData = previousState['apiData'].slice();
       
@@ -127,27 +127,24 @@ var TreeTimeLine = React.createClass({
 
   dates: [],
 
-  setTimeSpan: function(timeSpan) {
-    this.setState({ timeSpan: timeSpan });
+  generateDates: function(startTime, endTime, canvas) {
+      this.dates[canvas] = [];
+      for (var i = startTime; i <= endTime; i++) {
+      var date = new Date();
+      date.setDate(date.getDate() - i);
+      this.dates[canvas].push(date.toJSON().slice(0, 10));
+    }
   },
 
   render: function() {
 
-    var component = this;
+    this.renderCanvas(0, 6, 1);    // Crucial step that (re-)renders D3 canvas
+    this.renderCanvas(7, 13, 2);
+    this.renderCanvas(14, 20, 3);
+    this.renderCanvas(21, 28, 4);
 
-    var generateDates = function(timeSpan) {
-        component.dates = [];
-        for (var i = -1; i < timeSpan; i++) {
-        var date = new Date();
-        date.setDate(date.getDate() - i);
-        component.dates.push(date.toJSON().slice(0, 10));
-      }
-    }
 
-    generateDates(this.state.timeSpan);
-
-    this.renderCanvas();  // Crucial step that (re-)renders D3 canvas
-    this.getDynamicStyles();
+    // this.getDynamicStyles();
     
     return (
       React.createElement('div', { id: 'd3container', style : d3Styles.container },
@@ -155,14 +152,18 @@ var TreeTimeLine = React.createClass({
         //  React.createElement('img', { id: 'logo', style: {width: '100px', height: '100px', opacity: '.8', marginTop: '10px' }, src: chrome.extension.getURL('assets/immedia.png') })
         // ),
         React.createElement('div', { id : 'd3title', style : d3Styles.title }, 'Recent Media'),
-        React.createElement('div', { id : 'd3canvas', style: d3Styles.treeBox })
+        React.createElement('div', { id : 'd3canvas1', style: d3Styles.treeBox }),
+        React.createElement('div', { id : 'd3canvas2'}),
+        React.createElement('div', { id : 'd3canvas3'}),
+        React.createElement('div', { id : 'd3canvas4'})
+        
       )
     );
   },
 
   getDynamicStyles: function() {
     // d3Styles.container.left = (this.state.width - 1350 > 0 ? (this.state.width - 1350) / 2 : 5) + 'px';
-    d3Styles.container.width = (this.state.width - 1350 < 0 ? 330 * (this.state.width/1350) : 330) + 'px';
+    // d3Styles.container.width = (this.state.width - 1350 < 0 ? 330 * (this.state.width/1350) : 330) + 'px';
     d3Styles.container.height = (this.dates.length*60) + 'px';
     return;
   },
@@ -180,18 +181,20 @@ var TreeTimeLine = React.createClass({
         img: item.img,
         source: item.parent.source,
         id: item.videoId,
-        tweetId: item.tweet_id_str,
+        tweetId: (item.hasOwnProperty('tweet_id') ? item.tweet_id : ''),
         byline: (item.hasOwnProperty('byline') ? item.byline : ''),
+        videoId: (item.hasOwnProperty('videoId') ? item.videoId : ''),
         abstract: (item.hasOwnProperty('abstract') ? item.abstract : ''),
         height: (item.hasOwnProperty('height') ? item.height : ''),
         width: (item.hasOwnProperty('width') ? item.width : ''),
       });
   },
 
-  renderCanvas: function() {
+  renderCanvas: function(startDay, endDay, canvas) {
 
+    this.generateDates(startDay, endDay, canvas);
     var component = this;
-    d3.select('svg').remove();
+    d3.select('#d3canvas' + canvas).select('svg').remove();
 
     var colors = d3.scale.category20c();
 
@@ -208,10 +211,20 @@ var TreeTimeLine = React.createClass({
     var oldestItem = this.state.apiData[this.state.apiData.length - 1] ? 
                       this.state.apiData[this.state.apiData.length - 1] : null;
 
+    /* Because each canvas represents one week in time, only data dated within that week's time period
+    will be included and rendered on the canvas */
+    var canvasData = [];
+    for (var i = 0; i < this.state.apiData.length; i++) {
+      if (this.dates[canvas].indexOf(this.state.apiData[i].date) !== -1) {
+        canvasData.push(this.state.apiData[i]);
+      }
+    };
+
+    /* Create a vertical D3 time scale, organized by day in descending order based on the 7-day period of dates
+    generated by the component's generateDates function (dates are stored in the component's date property) */
     var y = d3.time.scale()
-      .domain([new Date(this.dates[this.dates.length - 1]), new Date(this.dates[0])])
-      .rangeRound([height - 4*(margin.top) - margin.bottom, 0])
-      // .clamp(true)
+      .domain([new Date(this.dates[canvas][this.dates[canvas].length - 1]), d3.time.day.offset(new Date(this.dates[canvas][0]), 1)])
+      .rangeRound([height - margin.bottom, canvas === 1 ? 80 : 0])
 
     var yAxis = d3.svg.axis()
       .scale(y)
@@ -221,7 +234,7 @@ var TreeTimeLine = React.createClass({
       .tickSize(0)
       .tickPadding(20)
 
-    var svg = d3.select('#d3canvas').append('svg')
+    var svg = d3.select('#d3canvas' + canvas).append('svg')
       .attr('class', 'timeLine')
       .attr('width', width)
       .attr('height', this.state.height - 100)
@@ -258,38 +271,36 @@ var TreeTimeLine = React.createClass({
     var diagonal = d3.svg.diagonal()
         .projection(function(d) { return [d.y, d.x]; });
 
-      root = { 'name': 'data', 'children': this.state.apiData };
-      root.x0 = height / 1.5;
-      root.y0 = 0;
+    var root = { 'name': 'data', 'children': canvasData };
 
-    function toggleAll(d) {
-        if (d.children) {
-          d.children.forEach(toggleAll);
-          toggle(d);
-        }
+    /* When all data has been loaded, toggle the nodes so that only the first two days of each week
+    will be expanded (the other days are collapsed). This makes the canvas less crowded. */
+    if (this.renderCount === this.apis.length) {
+      root.children.forEach(collapse);
+      toggle(root.children[0]);
+      toggle(root.children[1]);
+    }
+
+    update(root, canvas);
+
+    function collapse(d) {
+      if (d.children) {
+        d._children = d.children;
+        d.children = null;
       }
+    }
 
-      update(root);
+    function update(root, canvas) {
 
-    function update(source) {
-
-      var duration = function(d) {
-        if (d.rendered < component.apis.length) {
-          d.rendered++;
-          return 5;
-        } else if (!d.rendered) {
-          d.rendered = 1;
-        }
-        return 500;
-      }
+      var duration = 500;
 
       var nodes = tree.nodes(root).reverse();
-      var links = d3.layout.tree().links(nodes);
+      var links = tree.links(nodes);
 
       nodes.forEach(function(d) { 
         if (d.depth === 1) {
           if (d === oldestItem) {
-            d.x = height - 2*(margin.top);
+            d.x = height - margin.bottom;
             d.y = 0;
             return;
           }
@@ -299,55 +310,64 @@ var TreeTimeLine = React.createClass({
         }
         else {
           if (d.depth === 2) {
-            d.y = 120;
+            d.y = 120 * (component.state.width > 1350 ? 1 : (component.state.width / 1350));
           };
           if (d.depth === 3) {
-            d.y = 240;
+            d.y = 240 * (component.state.width > 1350 ? 1 : (component.state.width / 1350));
             }
           }
         });
 
       var node = svg.selectAll("g.node")
-          .data(nodes, function(d) { return d.id || (d.id = ++i); });
+          .data(nodes, function(d) { return d.id || (d.id = ++idCounter); });
 
-      var nodeEnter = node.enter().append("svg:g")
-        .attr("class", "node")
-        .on("click", function(d) {
-          console.log(d);
-          if (d.url) { 
-            window.open(d.url,'_blank');
-            return;
-          } else if (d.parent.source === 'youtube') {
-            window.open('https://www.youtube.com/watch?v=' + d.id, '_blank');
-            return;
-          }
-          toggle(d); 
-          update(d); 
-        })
-        .on("mouseenter", function(d) {
-          console.log(d);
-          if (d.depth === 3) {
-            component.mouseOver(d);
-          }
-        })
-        .on('mouseover', function(d) {
-          if (d.depth === 3) {
-            d3.select(this).select('circle')
-              .transition()
-              .attr({
-                r: 28,
+      var nodeEnter = node.enter().append('svg:g')
+              .attr('class', 'node')
+              .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
+              .on('click', function(d) {
+                if (d.url) { 
+                  window.open(d.url,'_blank');
+                  return;
+                } else if (d.parent.source === 'youtube') {
+                  window.open('https://www.youtube.com/watch?v=' + d.videoId, '_blank');
+                  return;
+                }
+                toggle(d); 
+                update(root, canvas); 
               })
-            }
-        })
-        .on('mouseout', function(d) {
-          if (d.depth === 3) {
-            d3.select(this).select('circle')
-              .transition()
-              .attr({
-                r: 25,
+              .on('mouseenter', function(d) {
+                d3.select(this).select('circle')
+                  .style({
+                    stroke: 'blue',
+                    strokeWidth: 1.5 + 'px',
+                  })
+                if (d.depth === 3) {
+                  component.mouseOver(d);
+                }
               })
-          }
-        })
+              .on('mouseover', function(d) {
+                if (d.depth === 3) {
+                  d3.select(this).select('circle')
+                    .transition()
+                    .attr({
+                      r: 28,
+                    })
+                  }
+              })
+              .on('mouseout', function(d) {
+                d3.select(this).select('circle')
+                  .style({
+                    stroke: 'steelblue',
+                    strokeWidth: 1.5 + 'px',
+                  })
+                if (d.depth === 3) {
+                  d3.select(this).select('circle')
+                    .transition()
+                    .attr({
+                      r: 25,
+                    })
+                  }
+              });
 
       var defs = svg.append('svg:defs');
         defs.append('svg:pattern')
@@ -380,6 +400,16 @@ var TreeTimeLine = React.createClass({
           .attr('y', 5)
           .attr('width', 15)
           .attr('height', 15)
+        defs.append('svg:pattern')
+          .attr('id', 'tile-twitternews')
+          .attr('width', '20')
+          .attr('height', '20')
+          .append('svg:image')
+          .attr('xlink:href', 'https://pbs.twimg.com/profile_images/3756363930/c96b2ab95a4149493229210abaf1f1fa_400x400.png')
+          .attr('x', -2)
+          .attr('y', -1)
+          .attr('width', 27)
+          .attr('height', 27)
 
       nodeEnter.append("svg:circle")
         .attr("r", 1e-6)
@@ -394,18 +424,15 @@ var TreeTimeLine = React.createClass({
       var nodeUpdate = node.transition()
           .duration(duration)
           .attr("transform", function(d) { 
-            if (d == root) {
-              d.y = -1000;
-            }
             return "translate(" + d.y + "," + d.x + ")"; 
           });
 
       nodeUpdate.select("circle")
-          .attr("r", function(d) {
+          .attr('r', function(d) {
             if (d.depth === 1 && d._children) {
-              return 12;
+              return Math.max(d._children.length * 6, 10);
             } else if (d.depth === 1 && d.children) {
-              return Math.max(d.children.length * 6, 9);
+              return 10;
             } else if (d.source) {
               return 12;
             } else if (d.depth === 3)
@@ -436,8 +463,8 @@ var TreeTimeLine = React.createClass({
                     return d.img;
                   }
                 })
-                .attr('x', 0)
-                .attr('y', 0)
+                .attr('x', -2)
+                .attr('y', -2)
                 .attr('width', 55)
                 .attr('height', 55)
               return 'url(#tile-img' + d.id + ')'
@@ -447,11 +474,15 @@ var TreeTimeLine = React.createClass({
 
       var nodeExit = node.exit().transition()
           .duration(duration)
-          .attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
-          .remove();
+          .attr('transform', function(d) { return 'translate(' + d.parent.y + ',' + d.parent.x + ')'; })
 
-      nodeExit.select("circle")
-          .attr("r", 1e-6);
+      nodeExit.select('circle')
+          .attr('r', 1e-6);
+
+      nodes.forEach(function(d) {
+        d.x0 = d.x;
+        d.y0 = d.y;
+      });
 
       var link = svg.selectAll("path.link")
           .data(tree.links(nodes), function(d) { return d.target.id; })
@@ -459,18 +490,20 @@ var TreeTimeLine = React.createClass({
       link.enter().insert("svg:path", "g")
           .attr("class", "link")
           .attr("d", function(d) {
-            var origin = { x: source.x0, y: source.y0 };
+            var origin = { x: d.source.x0, y: d.source.y0 };
             return diagonal({ source: origin, target: origin });
           })
           .style({
             fill: 'none',
-            stroke: '#ccc',
             strokeWidth: '1.5px',
           })
-        .transition()
-          .duration(500)
-          .attr("d", diagonal)
+          //The links from the hidden root node to the nodes on the timeline will not show.
+          .style('stroke', function(d) {
+            if (d.target.depth === 1) { return 'white'; }
+            else { return '#ccc'; };
+          })
 
+  
       link.transition()
           .duration(500)
           .attr("d", diagonal);
@@ -478,15 +511,13 @@ var TreeTimeLine = React.createClass({
       link.exit().transition()
           .duration(500)
           .attr("d", function(d) {
-            var o = {x: source.x, y: source.y};
-            return diagonal({source: o, target: o});
+            var origin = {x: d.source.x, y: d.source.y};
+            return diagonal({source: origin, target: origin});
           })
           .remove();
 
-      nodes.forEach(function(d) {
-        d.x0 = d.x;
-        d.y0 = d.y;
-      });
+      if (canvas === 1 && canvasData[0] && canvasData[0].children[0]) {component.mouseOver(canvasData[0].children[0].children[0])}
+
     }
 
     function toggle(d) {
@@ -497,7 +528,6 @@ var TreeTimeLine = React.createClass({
         d.children = d._children;
         d._children = null;
       }
-      update(root);
     }
   },
 
