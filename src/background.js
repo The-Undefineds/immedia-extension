@@ -11,7 +11,6 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab){
     chrome.tabs.executeScript(null, {file: "./assets/youtube1.js"});
     chrome.tabs.executeScript(null, {file: "./assets/youtube2.js"});
     chrome.tabs.executeScript(null, {code: "window.twttr = (function(d, s, id) {var js, fjs = d.getElementsByTagName(s)[0],t = window.twttr || {};if (d.getElementById(id)) return t;js = d.createElement(s);js.id = id;js.src = '  https://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js, fjs);t._e = [];t.ready = function(f) {t._e.push(f);};return t;}(document, 'script', 'twitter-wjs'));"});
-
     // chrome.tabs.executeScript(null, {file: "./src/loadmeta.js"}); //used to stop the Twitter error msg
     chrome.tabs.executeScript(null, {file: "./src/treetimeline.js"});
     chrome.tabs.executeScript(null, {file: "./src/preview.js"});
@@ -31,7 +30,7 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab){
 });
 
 chrome.runtime.onMessage.addListener(function(message, sender){
-  var searchTerm = parseUrl(sender.url);
+  var searchTerm = parseUrl(sender.url).replace(/\s\(.*$/,'').toLowerCase();
   if (searchTerm === 'Main Page') {
     searchTerm = 'immediahomepage';
   }

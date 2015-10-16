@@ -12,6 +12,7 @@ var TwitterPreview = React.createClass({
   },
 
   componentDidUpdate: function() {
+
     $('#twitterPreview').empty();
     var twitterItem = this.props.previewItem;
     this.embedTweet(twitterItem.tweetId);
