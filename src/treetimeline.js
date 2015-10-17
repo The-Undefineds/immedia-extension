@@ -17,6 +17,7 @@ var d3Styles = {
     width: '384px',
   },
   title: {
+    position: 'fixed',
     fontFamily: 'Serif',
     fontSize: '24px',
     color: 'black',
@@ -24,7 +25,8 @@ var d3Styles = {
     marginBottom: '10px',
     paddingLeft: '5px',
     borderBottom: '1px solid gray',
-    width: '370px',
+    width: '350px',
+    backgroundColor: '#f6f6f6',
   },
   d3: {
     position: 'absolute',
@@ -34,7 +36,7 @@ var d3Styles = {
   },
   treeBox: {
     // border: 'solid 1px #a7d7f9',
-    // marginTop: '15px',
+    marginTop: '15px',
     // backgroundColor: 'white',
     // width: '384px',
     // overflowY: 'scroll',
