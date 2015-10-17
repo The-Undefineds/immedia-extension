@@ -85,6 +85,13 @@ var TreeTimeLine = React.createClass({
     });
   },
 
+  componentDidUpdate: function(){
+    this.renderCanvas(0, 6, 1);    // Crucial step that (re-)renders D3 canvas
+    this.renderCanvas(7, 13, 2);
+    this.renderCanvas(14, 20, 3);
+    this.renderCanvas(21, 28, 4);
+  },
+
   componentWillReceiveProps: function(newProps){
     this.renderCount = 0;
     this.setState({
@@ -141,11 +148,6 @@ var TreeTimeLine = React.createClass({
   },
 
   render: function() {
-
-    this.renderCanvas(0, 6, 1);    // Crucial step that (re-)renders D3 canvas
-    this.renderCanvas(7, 13, 2);
-    this.renderCanvas(14, 20, 3);
-    this.renderCanvas(21, 28, 4);
 
     this.getDynamicStyles();
     // this.onlyKeepContainerFixedVertically();
@@ -457,6 +459,8 @@ var TreeTimeLine = React.createClass({
               return 'url(#tile-nyt)';
             } else if (d.source == 'youtube') {
               return 'url(#tile-youtube)';
+            } else if (d.source === 'twitter news') {
+              return 'url(#tile-twitternews';
             } else if (d.img === '') {
               return colors(d.id);
             } else if (d.depth === 3) {
@@ -480,9 +484,8 @@ var TreeTimeLine = React.createClass({
                 .attr('height', 55)
               return 'url(#tile-img' + d.id + ')'
             }
-            return d._children ? "lightsteelblue" : "#fff"; 
+            return d._children ? 'lightsteelblue' : '#fff'; 
           })
-
       var nodeExit = node.exit().transition()
           .duration(duration)
           .attr('transform', function(d) { return 'translate(' + d.parent.y + ',' + d.parent.x + ')'; })
