@@ -16,15 +16,30 @@ var NytStyles = {
     marginTop: '2px',
     marginBottom: '2px',
     textAlign: 'center',
-    fontSize: '10px'
+    fontSize: '10px',
   },
   image: {
     textAlign: 'center',
+
   },
   body: {
-    textAlign: 'center',
+    textAlign: 'left',
     paddingLeft: '15px',
-    paddingRight: '15px',
+    paddingRight: '15px'
+  },
+  searchButton: {
+      verticalAlign: 'middle',
+      marginLeft: '2px',
+      marginTop: '10px',
+      marginBottom: '10px',
+      width: '100px',
+      height: '25px',
+      fontFamily: 'San Serif',
+      fontSize: '12px',
+      color: 'black',
+      textAlign: 'center',
+      background: '#3498db',
+      cursor: 'pointer',
   },
 };
 
@@ -46,8 +61,10 @@ var NytPreview = React.createClass({
         React.createElement('div', null,
           React.createElement('h1', { style : NytStyles.headline}, this.props.previewItem.title),
           React.createElement('h3', { style : NytStyles.byline}, this.props.previewItem.byline),
-          this.props.previewItem.img !== '' ? React.createElement('img', { src : this.props.previewItem.img , style : { textAlign : 'left', width: '40%', height: '40%', float: 'left'}, height : this.props.previewItem.height * ratio, width : this.props.previewItem.width * ratio }) : null,
-          React.createElement('p', { style : NytStyles.body }, this.props.previewItem.abstract)
+          this.props.previewItem.img !== '' ? React.createElement('img', { src : this.props.previewItem.img , style : { textAlign : 'left', marginLeft: '15px', width: '40%', height: '40%', float: 'left'}, height : this.props.previewItem.height * ratio, width : this.props.previewItem.width * ratio }) : null,
+          React.createElement('span', { style: { width: '15px', height: '100px', float: 'left' } }),
+          React.createElement('p', { style : NytStyles.body }, this.props.previewItem.abstract),
+          React.createElement('button', { style : NytStyles.searchButton }, 'Read More' )
         )
       )
     );
