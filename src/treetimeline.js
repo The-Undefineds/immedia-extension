@@ -156,9 +156,6 @@ var TreeTimeLine = React.createClass({
     
     return (
       React.createElement('div', { id: 'd3container', style : d3Styles.container },
-        // React.createElement('div', { style: {textAlign: 'center'} },
-        //  React.createElement('img', { id: 'logo', style: {width: '100px', height: '100px', opacity: '.8', marginTop: '10px' }, src: chrome.extension.getURL('assets/immedia.png') })
-        // ),
         React.createElement('div', { id : 'd3title', style : d3Styles.title }, 'Recent Media'),
         React.createElement('div', { id: 'd3', style: d3Styles.treeBox}, 
           React.createElement('div', { id : 'd3canvas1'}),

@@ -130,16 +130,17 @@ var ResultsComponent = React.createClass({
         }
     })
 
-    // .on("scroll", function () {
-    //   var scrollOffset = $('#d3container').offset().top;
-    //   if (!showingLogo && scrollOffset > 160) {
-    //     showingLogo = true;
-    //     $('#logo').css({ opacity: '.8' });
-    //   } else if (showingLogo && scrollOffset <= 160) {
-    //     showingLogo = false;
-    //     $('#logo').css({ opacity: '.0' });
-    //   }
-    // })
+    .on("scroll", function () {
+      var scrollOffset = $('#d3container').offset().top;
+      console.log(scrollOffset);
+      if (!showingLogo && scrollOffset >= 420) {
+        showingLogo = true;
+        $('#logo').delay(100).animate({ opacity: 1}, 1000);
+      } else if (showingLogo && scrollOffset < 420) {
+        showingLogo = false;
+        $('#logo').delay(10).animate({ opacity: 0}, 250);
+      }
+    })
 
     // .on("click", function(event){
     //   if (!(event.clientX < 1170 && event.clientY < 455)) {
