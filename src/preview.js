@@ -53,7 +53,7 @@ var Preview = React.createClass({
       React.createElement('div', { id : 'previewContent', style : previewStyles.preview},
         // React.createElement('img', { style: previewStyles.exitButton, onClick: this.exit, src: chrome.extension.getURL('assets/exit.png') }),
         this.props.previewItem.source === 'nyt' ?  React.createElement(NytPreview, { previewItem : this.props.previewItem }) : null,
-        this.props.previewItem.source === 'twitter' ?  React.createElement(TwitterPreview, { previewItem : this.props.previewItem, width: previewStyles.preview.width, height : previewStyles.preview.height }) : null,
+        this.props.previewItem.source === 'twitter' || this.props.previewItem.source === 'twitter news' ?  React.createElement(TwitterPreview, { previewItem : this.props.previewItem, width: previewStyles.preview.width, height : previewStyles.preview.height }) : null,
         this.props.previewItem.source === 'youtube' ?  React.createElement(YouTubePreview, { previewItem : this.props.previewItem }) : null
       )
     );

@@ -108,6 +108,12 @@ var ResultsComponent = React.createClass({
     console.log('key ', event.which);
   },
 
+  // onlyKeepContainerFixedVertically: function(){
+  //   $(window).scroll(function(){
+  //     $('#results').css('left',-$(window).scrollLeft());
+  //   });
+  // },
+
   render: function(){
     var showingLogo;
 
@@ -137,6 +143,8 @@ var ResultsComponent = React.createClass({
     // })
 
     // this.getDynamicStyles();
+    this.onlyKeepContainerFixedVertically();
+
     return (
       React.createElement('div', {id: "results" },
         React.createElement('div', {id: "modal-d3", style: this.styles.d3}, 
@@ -146,7 +154,13 @@ var ResultsComponent = React.createClass({
         React.createElement('div', {id: "preview"}) 
       )
     )
-  }
+  },
+
+  onlyKeepContainerFixedVertically: function(){
+    $(window).scroll(function(){
+      $('#results').css('left',-$(window).scrollLeft());
+    });
+  },
 
 });
 

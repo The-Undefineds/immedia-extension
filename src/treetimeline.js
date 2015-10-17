@@ -13,6 +13,7 @@ var d3Styles = {
     height: '300px',
     textAlign: 'left',
     overflowY: 'auto',
+    overflowX: 'hidden',
     width: '384px',
   },
   title: {
@@ -37,6 +38,9 @@ var d3Styles = {
     // backgroundColor: 'white',
     // width: '384px',
     // overflowY: 'scroll',
+    overflowY: 'visible',
+    paddingBottom: '50px',
+
   },
 };
 
@@ -143,8 +147,8 @@ var TreeTimeLine = React.createClass({
     this.renderCanvas(14, 20, 3);
     this.renderCanvas(21, 28, 4);
 
-
-    // this.getDynamicStyles();
+    this.getDynamicStyles();
+    // this.onlyKeepContainerFixedVertically();
     
     return (
       React.createElement('div', { id: 'd3container', style : d3Styles.container },
@@ -152,19 +156,26 @@ var TreeTimeLine = React.createClass({
         //  React.createElement('img', { id: 'logo', style: {width: '100px', height: '100px', opacity: '.8', marginTop: '10px' }, src: chrome.extension.getURL('assets/immedia.png') })
         // ),
         React.createElement('div', { id : 'd3title', style : d3Styles.title }, 'Recent Media'),
-        React.createElement('div', { id : 'd3canvas1', style: d3Styles.treeBox }),
-        React.createElement('div', { id : 'd3canvas2'}),
-        React.createElement('div', { id : 'd3canvas3'}),
-        React.createElement('div', { id : 'd3canvas4'})
-        
+        React.createElement('div', { id: 'd3', style: d3Styles.treeBox}, 
+          React.createElement('div', { id : 'd3canvas1'}),
+          React.createElement('div', { id : 'd3canvas2'}),
+          React.createElement('div', { id : 'd3canvas3'}),
+          React.createElement('div', { id : 'd3canvas4'})
+        )
       )
     );
   },
 
+  // onlyKeepContainerFixedVertically: function(){
+  //   $(window).scroll(function(){
+  //     $('#d3container').css('left',-$(window).scrollLeft());
+  //   });
+  // },
+
   getDynamicStyles: function() {
     // d3Styles.container.left = (this.state.width - 1350 > 0 ? (this.state.width - 1350) / 2 : 5) + 'px';
     // d3Styles.container.width = (this.state.width - 1350 < 0 ? 330 * (this.state.width/1350) : 330) + 'px';
-    d3Styles.container.height = (this.dates.length*60) + 'px';
+    d3Styles.container.height = window.innerHeight - 290 + 'px';
     return;
   },
 
@@ -244,19 +255,19 @@ var TreeTimeLine = React.createClass({
     svg.append('g')
       .attr('class', 'yAxis')
       .attr({
-        'font-family': 'Arial, sans-serif',
-        'font-size': 10 * (this.state.width / 1350) + 'px',
+        'font-family': "Linux Libertine,Georgia,Times,serif",
+        'font-size': 9 * (this.state.width / 1350) + 'px',
       })
       .attr({
         fill: 'none',
-        stroke: 'lightsteelblue',
+        stroke: 'black',
         'shape-rendering': 'crispEdges',
       })
       .call(yAxis);
 
-    var timeLine = svg.selectAll('.timeLine')
-      .data({ 'name': 'data', 'children': this.state.apiData })
-      .attr('y', function(d) { return y(new Date(d.date)); })
+    // var timeLine = svg.selectAll('.timeLine')
+    //   .data({ 'name': 'data', 'children': this.state.apiData })
+    //   .attr('y', function(d) { return y(new Date(d.date)); })
 
     svg.selectAll('g.node').remove();
 
