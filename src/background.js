@@ -1,9 +1,9 @@
-var bodyWidth;    // For storing the width of wiki's displaced body, so
-                  // that we can return it back to normal when extension is deactivated
+var bodyWidth;           // For storing the width of wiki's displaced body, so
+                         // that we can return it back to normal when extension is deactivated
 
 chrome.tabs.onUpdated.addListener(function(id, info, tab){
   
-  if(tab.url.match(/wikipedia.org\/wiki/g) && tab.status === 'loading'){
+  if(tab.url.match(/wikipedia.org\/wiki/g) && tab.status === 'complete'){
 
     chrome.tabs.executeScript(null, {file: "./assets/jquery.min.js"});
     chrome.tabs.executeScript(null, {file: "./assets/d3.min.js"});
