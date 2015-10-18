@@ -1,9 +1,9 @@
 {
   "manifest_version": 2,
 
-  "name": "Testing React",
-  "description": "This React Powered Extension",
-  "version": "1.0",
+  "name": "Immedia",
+  "description": "This is the chrome extension version of immedia.xyz, a data aggregator of current events on any given topic",
+  "version": "1.1.2",
 
   "page_action": {
     "default_icon": "icon.png"

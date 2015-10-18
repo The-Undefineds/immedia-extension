@@ -67,6 +67,8 @@ var TreeTimeLine = React.createClass({
   ],
 
   query: function(searchTerm){
+    console.log('in this.query')
+
     var bodyWidth = $('.mediawiki').width();
     for(var i = 0; i < this.apis.length; i++){
       chrome.runtime.sendMessage({
@@ -81,6 +83,8 @@ var TreeTimeLine = React.createClass({
   componentDidMount: function(){
     var component = this;
     this.query();
+
+    console.log('in componentDidMount')
 
     chrome.runtime.onMessage.addListener(function(message, sender){
       component.handleQuery(message);
