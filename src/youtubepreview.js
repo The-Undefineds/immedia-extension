@@ -48,6 +48,8 @@ var YouTubePreview = React.createClass({
         'onStateChange': onPlayerStateChange
       }
     });
+
+    $('#youtube').css('margin-top', '5px');
     var onPlayerReady = function(event) {
       event.target.playVideo();
     }
