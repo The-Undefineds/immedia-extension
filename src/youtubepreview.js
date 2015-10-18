@@ -27,6 +27,7 @@ var YouTubePreview = React.createClass({
 
   componentDidUpdate: function() {
     this.mountYouTubeVideo(this.props.previewItem.id);
+    $('#youtube').css('margin-top', '5px');
   },
 
   render: function() {
@@ -49,7 +50,6 @@ var YouTubePreview = React.createClass({
       }
     });
 
-    $('#youtube').css('margin-top', '5px');
     var onPlayerReady = function(event) {
       event.target.playVideo();
     }
