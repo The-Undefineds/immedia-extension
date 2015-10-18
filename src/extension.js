@@ -133,10 +133,10 @@ var ResultsComponent = React.createClass({
     .on("scroll", function () {
       var scrollOffset = $('#d3container').offset().top;
       console.log(scrollOffset);
-      if (!showingLogo && scrollOffset >= 420) {
+      if (!showingLogo && scrollOffset >= 550) {
         showingLogo = true;
-        $('#logo').delay(100).animate({ opacity: 1}, 1000);
-      } else if (showingLogo && scrollOffset < 420) {
+        $('#logo').animate({ opacity: 1}, 500);
+      } else if (showingLogo && scrollOffset < 550) {
         showingLogo = false;
         $('#logo').animate({ opacity: 0}, 0);
       }
