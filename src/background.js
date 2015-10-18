@@ -2,8 +2,13 @@ var bodyWidth;           // For storing the width of wiki's displaced body, so
                          // that we can return it back to normal when extension is deactivated
 
 chrome.tabs.onUpdated.addListener(function(id, info, tab){
-  
-  if(tab.url.match(/wikipedia.org\/wiki/g) && tab.status === 'complete'){
+  // Ensures that on reloads, the gate is opened for the extension to load again (the next 'if' statement)
+  if(tab.status === 'loading') {
+    localStorage[tab.id] = 0;     // localStorage used so that we can keep track of the state of different tabs
+  }
+
+  if(localStorage[tab.id] === '0' && tab.status === 'complete' && tab.url.match(/wikipedia.org\/wiki/g)){
+    localStorage[tab.id] = 1;
 
     chrome.tabs.executeScript(null, {file: "./assets/jquery.min.js"});
     chrome.tabs.executeScript(null, {file: "./assets/d3.min.js"});
@@ -19,13 +24,12 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab){
     chrome.tabs.executeScript(null, {file: "./src/twitterpreview.js"});
     chrome.tabs.executeScript(null, {file: "./src/youtubepreview.js"});
 
-    // "shows the icon" -Joel
-    chrome.pageAction.show(tab.id);
+    if (localStorage['immedia.chrome'] === 'on') {                     
+      chrome.tabs.executeScript(null, {file: "./src/extension.js"});     // If they previously had the extension turned 'on',
+    }                                                                    // when going to a new page the extension will load again
 
-    if (localStorage['immedia.chrome'] === 'on') {                       // If they previously had the extension activated, when 
-      console.log('running extention.js')
-      chrome.tabs.executeScript(null, {file: "./src/extension.js"});     // going to a new page the extension will be activated
-    }
+    // Renders icon (moved down here so that it doesn't show up before the extension has loaded (if the extension is 'on'))
+    chrome.pageAction.show(tab.id);
   }
 
 });
