@@ -31,7 +31,7 @@ var YouTubePreview = React.createClass({
 
   render: function() {
     return (
-      React.createElement('div', { id : 'youtube' })
+      React.createElement('div', { id : 'youtube', style: {marginTop: '5px'} })
     );
   },
 

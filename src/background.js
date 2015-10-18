@@ -23,6 +23,7 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab){
     chrome.pageAction.show(tab.id);
 
     if (localStorage['immedia.chrome'] === 'on') {                       // If they previously had the extension activated, when 
+      console.log('running extention.js')
       chrome.tabs.executeScript(null, {file: "./src/extension.js"});     // going to a new page the extension will be activated
     }
   }
@@ -31,10 +32,10 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab){
 
 chrome.runtime.onMessage.addListener(function(message, sender){
   var searchTerm = parseUrl(sender.url).replace(/\s\(.*$/,'').toLowerCase();
-  if (searchTerm === 'Main Page') {
+  if (searchTerm === 'main page') {
     searchTerm = 'immediahomepage';
   }
-  handleQuery(message, searchTerm);
+  handleQuery(message, searchTerm, sender);
   bodyWidth = message.bodyWidth;
 });
 
@@ -62,18 +63,11 @@ function parseUrl(url){
   return resultURL.replace(/_/g, ' ');
 }
 
-function handleQuery(searchQuery, searchTerm){
+function handleQuery(searchQuery, searchTerm, sender){
   searchQuery.searchTerm = searchTerm;  
   $.post(searchQuery.url, searchQuery)
     .done(function(response) {
-      checkTabs(response);
+      chrome.tabs.sendMessage(sender.tab.id, response);
       console.log('Post request was a Success...Here is the response', response)
    });
-}
-
-function checkTabs(response){
-  chrome.tabs.query({active:true}, function(tabs){
-    //chrome.tabs.executeScript(null, {file: "./assets/twitter.js"});
-    chrome.tabs.sendMessage(tabs[0].id, response);               
-  });
 }

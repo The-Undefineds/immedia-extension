@@ -138,7 +138,7 @@ var ResultsComponent = React.createClass({
         $('#logo').delay(100).animate({ opacity: 1}, 1000);
       } else if (showingLogo && scrollOffset < 420) {
         showingLogo = false;
-        $('#logo').delay(10).animate({ opacity: 0}, 250);
+        $('#logo').animate({ opacity: 0}, 0);
       }
     })
 
