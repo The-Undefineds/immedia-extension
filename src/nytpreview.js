@@ -56,7 +56,6 @@ var NytPreview = React.createClass({
         ratio = 465 / this.props.previewItem.width;
       }
     }
-    console.log(this.props);
     return (
       React.createElement('a', { style : NytStyles.anchor, href : this.props.previewItem.url, target : '_blank'},
         React.createElement('div', null,
