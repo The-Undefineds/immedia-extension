@@ -56,13 +56,14 @@ var NytPreview = React.createClass({
         ratio = 465 / this.props.previewItem.width;
       }
     }
+    console.log(this.props);
     return (
       React.createElement('a', { style : NytStyles.anchor, href : this.props.previewItem.url, target : '_blank'},
         React.createElement('div', null,
           React.createElement('h1', { style : NytStyles.headline}, this.props.previewItem.title),
           React.createElement('h3', { style : NytStyles.byline}, this.props.previewItem.byline),
           this.props.previewItem.img !== '' ? React.createElement('img', { src : this.props.previewItem.img , style : { textAlign : 'left', marginLeft: '15px', width: '40%', height: '40%', float: 'left'}, height : this.props.previewItem.height * ratio, width : this.props.previewItem.width * ratio }) : null,
-          React.createElement('span', { style: { width: '15px', height: '100px', float: 'left' } }),
+          React.createElement('span', { style: { width: '15px', height: this.props.previewItem.height * .5, float: 'left' } }),
           React.createElement('p', { style : NytStyles.body }, this.props.previewItem.abstract),
           React.createElement('button', { style : NytStyles.searchButton }, 'Read More' )
         )
