@@ -10,22 +10,22 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab){
   if(localStorage[tab.id] === '0' && tab.status === 'complete' && tab.url.match(/wikipedia.org\/wiki/g)){
     localStorage[tab.id] = 1;
 
-    chrome.tabs.executeScript(null, {file: "./assets/jquery.min.js"});
-    chrome.tabs.executeScript(null, {file: "./assets/d3.min.js"});
-    chrome.tabs.executeScript(null, {file: "./assets/react.js"});
-    chrome.tabs.executeScript(null, {file: "./assets/youtube1.js"});
-    chrome.tabs.executeScript(null, {file: "./assets/youtube2.js"});
-    chrome.tabs.executeScript(null, {code: "window.twttr = (function(d, s, id) {var js, fjs = d.getElementsByTagName(s)[0],t = window.twttr || {};if (d.getElementById(id)) return t;js = d.createElement(s);js.id = id;js.src = '  https://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js, fjs);t._e = [];t.ready = function(f) {t._e.push(f);};return t;}(document, 'script', 'twitter-wjs'));"});
+    chrome.tabs.executeScript(id, {file: "./assets/jquery.min.js"});
+    chrome.tabs.executeScript(id, {file: "./assets/d3.min.js"});
+    chrome.tabs.executeScript(id, {file: "./assets/react.js"});
+    chrome.tabs.executeScript(id, {file: "./assets/youtube1.js"});
+    chrome.tabs.executeScript(id, {file: "./assets/youtube2.js"});
+    chrome.tabs.executeScript(id, {code: "window.twttr = (function(d, s, id) {var js, fjs = d.getElementsByTagName(s)[0],t = window.twttr || {};if (d.getElementById(id)) return t;js = d.createElement(s);js.id = id;js.src = '  https://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js, fjs);t._e = [];t.ready = function(f) {t._e.push(f);};return t;}(document, 'script', 'twitter-wjs'));"});
     // chrome.tabs.executeScript(null, {file: "./src/loadmeta.js"}); //used to stop the Twitter error msg
-    chrome.tabs.executeScript(null, {file: "./src/treetimeline.js"});
-    chrome.tabs.executeScript(null, {file: "./src/preview.js"});
-    chrome.tabs.executeScript(null, {file: "./src/emptypreview.js"});
-    chrome.tabs.executeScript(null, {file: "./src/nytpreview.js"});
-    chrome.tabs.executeScript(null, {file: "./src/twitterpreview.js"});
-    chrome.tabs.executeScript(null, {file: "./src/youtubepreview.js"});
+    chrome.tabs.executeScript(id, {file: "./src/treetimeline.js"});
+    chrome.tabs.executeScript(id, {file: "./src/preview.js"});
+    chrome.tabs.executeScript(id, {file: "./src/emptypreview.js"});
+    chrome.tabs.executeScript(id, {file: "./src/nytpreview.js"});
+    chrome.tabs.executeScript(id, {file: "./src/twitterpreview.js"});
+    chrome.tabs.executeScript(id, {file: "./src/youtubepreview.js"});
 
     if (localStorage['immedia.chrome'] === 'on') {                     
-      chrome.tabs.executeScript(null, {file: "./src/extension.js"});     // If they previously had the extension turned 'on',
+      chrome.tabs.executeScript(id, {file: "./src/extension.js"});     // If they previously had the extension turned 'on',
     }                                                                    // when going to a new page the extension will load again
 
     // Renders icon (moved down here so that it doesn't show up before the extension has loaded (if the extension is 'on'))
@@ -46,17 +46,17 @@ chrome.runtime.onMessage.addListener(function(message, sender){
 chrome.pageAction.onClicked.addListener(function(tab){
   var d3On = localStorage['immedia.chrome'] || 'off';
   if(d3On === 'off'){
-    chrome.tabs.executeScript(null, {file: "./src/extension.js"})
+    chrome.tabs.executeScript(tab.id, {file: "./src/extension.js"})
     localStorage['immedia.chrome'] = 'on';
   }
   else{
-    chrome.tabs.executeScript(null, {code: "$(\'div\').remove(\'#extension\')"});
+    chrome.tabs.executeScript(tab.id, {code: "$(\'div\').remove(\'#extension\')"});
     localStorage['immedia.chrome'] = 'off';
 
     // Resizes and puts body back to original dimensions
     bodyWidth = (bodyWidth + 400).toString() + 'px';
-    chrome.tabs.executeScript(null, {code: "$(\'.mediawiki\').css(\'margin-left\',\'0px\')"});
-    chrome.tabs.executeScript(null, {code: "$(\'.mediawiki\').css(\'width\',\'" + bodyWidth + "\')"});
+    chrome.tabs.executeScript(tab.id, {code: "$(\'.mediawiki\').css(\'margin-left\',\'0px\')"});
+    chrome.tabs.executeScript(tab.id, {code: "$(\'.mediawiki\').css(\'width\',\'" + bodyWidth + "\')"});
   }
   
 })
@@ -68,7 +68,8 @@ function parseUrl(url){
 }
 
 function handleQuery(searchQuery, searchTerm, sender){
-  searchQuery.searchTerm = searchTerm;  
+  searchQuery.searchTerm = searchTerm;
+  console.log(searchQuery);
   $.post(searchQuery.url, searchQuery)
     .done(function(response) {
       chrome.tabs.sendMessage(sender.tab.id, response);
