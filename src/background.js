@@ -1,15 +1,21 @@
 var bodyWidth;           // For storing the width of wiki's displaced body, so
                          // that we can return it back to normal when extension is deactivated
+
 chrome.tabs.onUpdated.addListener(function(id, info, tab){
   // Ensures that on reloads, the gate is opened for the extension to load again (the next 'if' statement)
   if(tab.status === 'loading') {
-    localStorage['immedia' + tab.id] = 0;     // localStorage used so that we can keep track of the state of different tabs
+    localStorage[tab.id] = 0;     // localStorage used so that we can keep track of the state of different tabs
   }
 
-  if(localStorage['immedia' + tab.id] === '0' && tab.status === 'complete' && tab.url.match(/wikipedia.org\/wiki/g)){
-    localStorage['immedia' + tab.id] = 1;
-    if(tab.url.indexOf('#') === -1) {  // To prevent these scripts running again when the user redirects themselves within the same entry
-      exception = false;
+  if(localStorage[tab.id] === '0' && tab.status === 'complete' && tab.url.match(/wikipedia.org\/wiki/g)){
+    localStorage[tab.id] = 1;
+
+    if(tab.url.includes('#/media/') && localStorage['immedia.chrome'] === 'on'){
+      chrome.tabs.executeScript(id, {code: "$(\'div\').remove(\'#extension\')"});
+      localStorage['immedia.chrome'] === 'off'
+      chrome.pageAction.hide(tab.id);
+    }
+    else{
       chrome.tabs.executeScript(id, {file: "./assets/jquery.min.js"});
       chrome.tabs.executeScript(id, {file: "./assets/d3.min.js"});
       chrome.tabs.executeScript(id, {file: "./assets/react.js"});
@@ -23,19 +29,20 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab){
       chrome.tabs.executeScript(id, {file: "./src/nytpreview.js"});
       chrome.tabs.executeScript(id, {file: "./src/twitterpreview.js"});
       chrome.tabs.executeScript(id, {file: "./src/youtubepreview.js"});
+
+      if (localStorage['immedia.chrome'] === 'on') {                     
+        chrome.tabs.executeScript(id, {file: "./src/extension.js"});     // If they previously had the extension turned 'on',
+      }                                                                    // when going to a new page the extension will load again
+     
+      // Renders icon (moved down here so that it doesn't show up before the extension has loaded (if the extension is 'on'))
+      chrome.pageAction.show(tab.id);
     }
-
-    if (localStorage['immedia.chrome'] === 'on') {                     
-      chrome.tabs.executeScript(id, {file: "./src/extension.js"});     // If they previously had the extension turned 'on',
-    }                                                                    // when going to a new page the extension will load again
-
-    // Renders icon (moved down here so that it doesn't show up before the extension has loaded (if the extension is 'on'))
-    chrome.pageAction.show(tab.id);
   }
 
 });
 
 chrome.runtime.onMessage.addListener(function(message, sender){
+
   var searchTerm = parseUrl(sender.url).replace(/\s\(.*$/,'').toLowerCase();
   if (searchTerm === 'main page') {
     searchTerm = 'immediahomepage';
@@ -65,22 +72,12 @@ chrome.pageAction.onClicked.addListener(function(tab){
 function parseUrl(url){
   var index = url.lastIndexOf('/');
   var resultURL = url.slice(index + 1);
-  resultURL = resultURL.replace(/_/g, ' ');
-
-  var newURL = '';  // For wiki-URL's that have '#' in them 
-  for (var i = 0; i < resultURL.length; i++) {
-    if (resultURL[i] === '#') {
-      i += resultURL.length;
-    } else {
-      newURL += resultURL[i];
-    }
-  }
-  console.log(newURL);
-  return newURL;
+  return resultURL.replace(/_/g, ' ');
 }
 
 function handleQuery(searchQuery, searchTerm, sender){
   searchQuery.searchTerm = searchTerm;
+  console.log(searchQuery);
   $.post(searchQuery.url, searchQuery)
     .done(function(response) {
       chrome.tabs.sendMessage(sender.tab.id, response);
