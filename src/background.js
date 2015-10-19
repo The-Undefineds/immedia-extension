@@ -10,31 +10,39 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab){
   if(localStorage[tab.id] === '0' && tab.status === 'complete' && tab.url.match(/wikipedia.org\/wiki/g)){
     localStorage[tab.id] = 1;
 
-    chrome.tabs.executeScript(id, {file: "./assets/jquery.min.js"});
-    chrome.tabs.executeScript(id, {file: "./assets/d3.min.js"});
-    chrome.tabs.executeScript(id, {file: "./assets/react.js"});
-    chrome.tabs.executeScript(id, {file: "./assets/youtube1.js"});
-    chrome.tabs.executeScript(id, {file: "./assets/youtube2.js"});
-    chrome.tabs.executeScript(id, {code: "window.twttr = (function(d, s, id) {var js, fjs = d.getElementsByTagName(s)[0],t = window.twttr || {};if (d.getElementById(id)) return t;js = d.createElement(s);js.id = id;js.src = '  https://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js, fjs);t._e = [];t.ready = function(f) {t._e.push(f);};return t;}(document, 'script', 'twitter-wjs'));"});
-    // chrome.tabs.executeScript(null, {file: "./src/loadmeta.js"}); //used to stop the Twitter error msg
-    chrome.tabs.executeScript(id, {file: "./src/treetimeline.js"});
-    chrome.tabs.executeScript(id, {file: "./src/preview.js"});
-    chrome.tabs.executeScript(id, {file: "./src/emptypreview.js"});
-    chrome.tabs.executeScript(id, {file: "./src/nytpreview.js"});
-    chrome.tabs.executeScript(id, {file: "./src/twitterpreview.js"});
-    chrome.tabs.executeScript(id, {file: "./src/youtubepreview.js"});
+    if(tab.url.includes('#/media/') && localStorage['immedia.chrome'] === 'on'){
+      chrome.tabs.executeScript(id, {code: "$(\'div\').remove(\'#extension\')"});
+      localStorage['immedia.chrome'] === 'off'
+      chrome.pageAction.hide(tab.id);
+    }
+    else{
+      chrome.tabs.executeScript(id, {file: "./assets/jquery.min.js"});
+      chrome.tabs.executeScript(id, {file: "./assets/d3.min.js"});
+      chrome.tabs.executeScript(id, {file: "./assets/react.js"});
+      chrome.tabs.executeScript(id, {file: "./assets/youtube1.js"});
+      chrome.tabs.executeScript(id, {file: "./assets/youtube2.js"});
+      chrome.tabs.executeScript(id, {code: "window.twttr = (function(d, s, id) {var js, fjs = d.getElementsByTagName(s)[0],t = window.twttr || {};if (d.getElementById(id)) return t;js = d.createElement(s);js.id = id;js.src = '  https://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js, fjs);t._e = [];t.ready = function(f) {t._e.push(f);};return t;}(document, 'script', 'twitter-wjs'));"});
+      // chrome.tabs.executeScript(null, {file: "./src/loadmeta.js"}); //used to stop the Twitter error msg
+      chrome.tabs.executeScript(id, {file: "./src/treetimeline.js"});
+      chrome.tabs.executeScript(id, {file: "./src/preview.js"});
+      chrome.tabs.executeScript(id, {file: "./src/emptypreview.js"});
+      chrome.tabs.executeScript(id, {file: "./src/nytpreview.js"});
+      chrome.tabs.executeScript(id, {file: "./src/twitterpreview.js"});
+      chrome.tabs.executeScript(id, {file: "./src/youtubepreview.js"});
 
-    if (localStorage['immedia.chrome'] === 'on') {                     
-      chrome.tabs.executeScript(id, {file: "./src/extension.js"});     // If they previously had the extension turned 'on',
-    }                                                                    // when going to a new page the extension will load again
-
-    // Renders icon (moved down here so that it doesn't show up before the extension has loaded (if the extension is 'on'))
-    chrome.pageAction.show(tab.id);
+      if (localStorage['immedia.chrome'] === 'on') {                     
+        chrome.tabs.executeScript(id, {file: "./src/extension.js"});     // If they previously had the extension turned 'on',
+      }                                                                    // when going to a new page the extension will load again
+     
+      // Renders icon (moved down here so that it doesn't show up before the extension has loaded (if the extension is 'on'))
+      chrome.pageAction.show(tab.id);
+    }
   }
 
 });
 
 chrome.runtime.onMessage.addListener(function(message, sender){
+
   var searchTerm = parseUrl(sender.url).replace(/\s\(.*$/,'').toLowerCase();
   if (searchTerm === 'main page') {
     searchTerm = 'immediahomepage';
